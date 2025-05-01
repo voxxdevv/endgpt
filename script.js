@@ -1,495 +1,142 @@
-// script.js
 document.addEventListener('DOMContentLoaded', function() {
-    // DOM Elements
-    const contentInput = document.getElementById('contentInput');
     const analyzeBtn = document.getElementById('analyzeBtn');
+    const contentInput = document.getElementById('contentInput');
     const loadingIndicator = document.getElementById('loadingIndicator');
     const resultSection = document.getElementById('resultSection');
     const humanGauge = document.getElementById('humanGauge');
     const aiGauge = document.getElementById('aiGauge');
     const humanPercentage = document.getElementById('humanPercentage');
     const aiPercentage = document.getElementById('aiPercentage');
-    const contentSummary = document.getElementById('contentSummary');
-    
-    // Model variables
-    let model;
-    let tokenizer;
-    const maxSequenceLength = 128;
-    const vocabularySize = 10000;
-    
-    // Features of AI-generated text (expanded dataset for better analysis)
-    const aiPatterns = {
-        phrases: [
-            'in conclusion', 'to summarize', 'moreover', 'furthermore', 'nevertheless', 
-            'in addition', 'consequently', 'in contrast', 'specifically', 'for instance',
-            'as a result', 'in particular', 'in essence', 'in other words', 'to illustrate',
-            'admittedly', 'undoubtedly', 'presumably', 'naturally', 'generally speaking'
-        ],
-        sentenceStarters: [
-            'it is important to note that', 'it should be noted that', 'it is worth mentioning that',
-            'it is essential to understand that', 'it is crucial to recognize that',
-            'one might argue that', 'some would suggest that', 'many would agree that',
-            'research indicates that', 'studies have shown that', 'evidence suggests that'
-        ],
-        structuralPatterns: [
-            /firstly.*secondly.*finally/i,
-            /first.*second.*third/i,
-            /on one hand.*on the other hand/i,
-            /not only.*but also/i,
-            /while it is true that.*it is also important/i
-        ]
-    };
-    
-    // Human writing characteristics
-    const humanPatterns = {
-        informalExpressions: [
-            'kind of', 'sort of', 'you know', 'I guess', 'I think', 'I feel like',
-            'actually', 'basically', 'honestly', 'literally', 'just', 'pretty much',
-            'anyway', 'so yeah', 'like', 'stuff', 'things', 'maybe', 'probably'
-        ],
-        contractions: [
-            "don't", "can't", "won't", "shouldn't", "couldn't", "wouldn't", 
-            "isn't", "aren't", "wasn't", "weren't", "haven't", "hasn't", 
-            "it's", "that's", "there's", "here's", "who's", "what's",
-            "I'm", "you're", "we're", "they're", "I'll", "you'll", "we'll"
-        ],
-        punctuationPatterns: [
-            /\.\.\./g,            // Ellipsis
-            /\?!/g,               // Interrobang
-            /!{2,}/g,             // Multiple exclamation marks
-            /\?{2,}/g,            // Multiple question marks
-            /--/g,                // Em dash substitute
-        ]
-    };
-    
-    // Initialize TensorFlow.js model
-    async function initModel() {
-        try {
-            // Create a vocabulary from common words + AI/human indicators
-            tokenizer = createTokenizer();
-            
-            // Create the model architecture
-            model = tf.sequential();
-            
-            // Embedding layer
-            model.add(tf.layers.embedding({
-                inputDim: vocabularySize,
-                outputDim: 128,
-                inputLength: maxSequenceLength
-            }));
-            
-            // Convolutional layers for feature extraction
-            model.add(tf.layers.conv1d({
-                filters: 64,
-                kernelSize: 5,
-                padding: 'same',
-                activation: 'relu'
-            }));
-            model.add(tf.layers.maxPooling1d({ poolSize: 2 }));
-            
-            model.add(tf.layers.conv1d({
-                filters: 128,
-                kernelSize: 3,
-                padding: 'same',
-                activation: 'relu'
-            }));
-            model.add(tf.layers.maxPooling1d({ poolSize: 2 }));
-            
-            // LSTM for sequential patterns
-            model.add(tf.layers.bidirectional({
-                layer: tf.layers.lstm({
-                    units: 64,
-                    returnSequences: false
-                })
-            }));
-            
-            // Dense layers for classification
-            model.add(tf.layers.dense({ units: 128, activation: 'relu' }));
-            model.add(tf.layers.dropout({ rate: 0.5 }));
-            model.add(tf.layers.dense({ units: 32, activation: 'relu' }));
-            model.add(tf.layers.dense({ units: 1, activation: 'sigmoid' }));
-            
-            // Compile the model
-            model.compile({
-                optimizer: tf.train.adam(0.001),
-                loss: 'binaryCrossentropy',
-                metrics: ['accuracy']
-            });
-            
-            // We'd normally load pre-trained weights here
-            // Since this is a demonstration, we'll use feature-based analysis instead
-            
-            return true;
-        } catch (error) {
-            console.error("Model initialization error:", error);
-            return false;
-        }
-    }
-    
-    // Create a tokenizer with a vocabulary from common words
-    function createTokenizer() {
-        const commonWords = [
-            // Top 200 English words
-            "the", "be", "to", "of", "and", "a", "in", "that", "have", "I", 
-            "it", "for", "not", "on", "with", "he", "as", "you", "do", "at",
-            "this", "but", "his", "by", "from", "they", "we", "say", "her", "she",
-            "or", "an", "will", "my", "one", "all", "would", "there", "their", "what",
-            "so", "up", "out", "if", "about", "who", "get", "which", "go", "me",
-            "when", "make", "can", "like", "time", "no", "just", "him", "know", "take",
-            "people", "into", "year", "your", "good", "some", "could", "them", "see", "other",
-            "than", "then", "now", "look", "only", "come", "its", "over", "think", "also",
-            "back", "after", "use", "two", "how", "our", "work", "first", "well", "way",
-            "even", "new", "want", "because", "any", "these", "give", "day", "most", "us",
-            "very", "important", "really", "world", "much", "should", "need", "try", "many", "may",
-            "such", "able", "example", "help", "case", "different", "point", "right", "great", "where",
-            "same", "those", "every", "through", "mean", "tell", "three", "state", "never", "leave",
-            "own", "while", "high", "school", "find", "part", "place", "end", "number", "feel",
-            "become", "put", "actually", "fact", "though", "less", "might", "system", "too", "set",
-            "each", "question", "least", "still", "during", "ask", "change", "going", "problem", "call",
-            "government", "life", "company", "group", "yes", "interest", "against", "thing", "provide", "however",
-            "last", "include", "public", "without", "lead", "nothing", "long", "both", "often", "next",
-            "possible", "level", "child", "form", "study", "turn", "few", "always", "second", "develop"
-        ];
+    const analysisText = document.getElementById('analysisText');
+
+    // Subtle parallax effect
+    document.addEventListener('mousemove', function(e) {
+        const cards = document.querySelectorAll('.glass-card');
+        const mouseX = e.clientX / window.innerWidth - 0.5;
+        const mouseY = e.clientY / window.innerHeight - 0.5;
         
-        // Add AI pattern words
-        const aiWords = [].concat(
-            ...aiPatterns.phrases.map(p => p.split(' ')),
-            ...aiPatterns.sentenceStarters.map(p => p.split(' '))
-        );
-        
-        // Add human pattern words
-        const humanWords = [].concat(
-            ...humanPatterns.informalExpressions.map(p => p.split(' ')),
-            humanPatterns.contractions
-        );
-        
-        // Create vocabulary mapping
-        const vocabMap = {};
-        const uniqueWords = [...new Set([...commonWords, ...aiWords, ...humanWords])];
-        
-        // Create vocabulary with common words first
-        uniqueWords.slice(0, vocabularySize - 1).forEach((word, index) => {
-            vocabMap[word.toLowerCase()] = index + 1; // 0 reserved for padding
+        cards.forEach(card => {
+            const cardRect = card.getBoundingClientRect();
+            const cardCenterX = cardRect.left + cardRect.width / 2;
+            const cardCenterY = cardRect.top + cardRect.height / 2;
+            
+            const distanceX = (e.clientX - cardCenterX) / (window.innerWidth / 2) * 5;
+            const distanceY = (e.clientY - cardCenterY) / (window.innerHeight / 2) * 5;
+            
+            const rotateX = -distanceY;
+            const rotateY = distanceX;
+            
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1, 1, 1)`;
         });
         
-        return {
-            word2index: vocabMap,
-            tokenize: function(text) {
-                // Simple tokenization by splitting on spaces and punctuation
-                return text.toLowerCase()
-                    .replace(/[^\w\s']/g, ' ')
-                    .split(/\s+/)
-                    .filter(t => t.length > 0);
-            },
-            textsToSequences: function(texts) {
-                const sequences = [];
-                for (const text of texts) {
-                    const tokens = this.tokenize(text);
-                    const sequence = tokens.map(token => 
-                        this.word2index[token] || 0 // OOV (out of vocabulary) tokens get 0
-                    );
-                    sequences.push(sequence);
-                }
-                return sequences;
-            },
-            padSequences: function(sequences) {
-                return sequences.map(seq => {
-                    if (seq.length >= maxSequenceLength) {
-                        return seq.slice(0, maxSequenceLength);
-                    } else {
-                        return [...seq, ...Array(maxSequenceLength - seq.length).fill(0)];
-                    }
-                });
-            }
-        };
-    }
+        // Move blobs slightly based on mouse position
+        const blob1 = document.querySelector('.blob-1');
+        const blob2 = document.querySelector('.blob-2');
+        
+        blob1.style.transform = `translate(${mouseX * 40}px, ${mouseY * 40}px)`;
+        blob2.style.transform = `translate(${-mouseX * 40}px, ${-mouseY * 40}px)`;
+    });
     
-    // Extract linguistic features from text for analysis
-    function extractFeatures(text) {
-        // Normalize text for analysis
-        const normalizedText = text.toLowerCase();
-        const wordCount = text.split(/\s+/).filter(w => w.length > 0).length;
+    // Reset card transform when mouse leaves the window
+    document.addEventListener('mouseleave', function() {
+        const cards = document.querySelectorAll('.glass-card');
+        cards.forEach(card => {
+            card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+        });
+    });
+
+    // Pre-trained model data
+    // This simulates a trained model's weights for various linguistic features
+    const modelWeights = {
+        // Lexical features
+        avgWordLength: { weight: 0.12, aiThreshold: 5.2 },
+        uniqueWordRatio: { weight: 0.15, aiThreshold: 0.45 },
+        rarityScore: { weight: 0.18, aiThreshold: 0.35 },
         
-        if (wordCount === 0) return null;
+        // Syntactic features
+        avgSentenceLength: { weight: 0.08, aiThreshold: 18 },
+        syntaxComplexity: { weight: 0.14, aiThreshold: 0.4 },
+        punctuationRatio: { weight: 0.07, aiThreshold: 0.11 },
         
-        // Basic text statistics
-        const charCount = text.replace(/\s/g, '').length;
-        const avgWordLength = charCount / wordCount;
-        const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
-        const sentenceCount = sentences.length;
-        const avgSentenceLength = wordCount / Math.max(1, sentenceCount);
-        const paragraphs = text.split(/\n\s*\n/).filter(p => p.trim().length > 0);
-        const avgParagraphLength = wordCount / Math.max(1, paragraphs.length);
+        // Structural features
+        paragraphConsistency: { weight: 0.13, aiThreshold: 0.8 },
+        transitionDiversity: { weight: 0.11, aiThreshold: 0.38 },
         
-        // Vocabulary diversity (unique words / total words)
-        const uniqueWords = new Set(text.toLowerCase().match(/\b[a-z']+\b/g) || []);
-        const lexicalDiversity = uniqueWords.size / Math.max(1, wordCount);
-        
-        // AI pattern detection
-        const aiPhraseCount = aiPatterns.phrases.reduce((count, phrase) => {
-            return count + (normalizedText.match(new RegExp(phrase, 'gi')) || []).length;
-        }, 0);
-        
-        const aiStarterCount = aiPatterns.sentenceStarters.reduce((count, starter) => {
-            return count + (normalizedText.match(new RegExp(starter, 'gi')) || []).length;
-        }, 0);
-        
-        const aiStructureMatches = aiPatterns.structuralPatterns.reduce((count, pattern) => {
-            return count + (pattern.test(normalizedText) ? 1 : 0);
-        }, 0);
-        
-        // Human pattern detection
-        const informalExprCount = humanPatterns.informalExpressions.reduce((count, expr) => {
-            return count + (normalizedText.match(new RegExp('\\b' + expr + '\\b', 'gi')) || []).length;
-        }, 0);
-        
-        const contractionCount = humanPatterns.contractions.reduce((count, contr) => {
-            return count + (normalizedText.match(new RegExp('\\b' + contr + '\\b', 'gi')) || []).length;
-        }, 0);
-        
-        const informalPunctCount = humanPatterns.punctuationPatterns.reduce((count, pattern) => {
-            return count + (normalizedText.match(pattern) || []).length;
-        }, 0);
-        
-        // Consistency analysis (consistent paragraph lengths may indicate AI)
-        let paragraphLengths = paragraphs.map(p => p.split(/\s+/).filter(w => w.length > 0).length);
-        let paragraphLengthVariance = 0;
-        if (paragraphLengths.length > 1) {
-            const mean = paragraphLengths.reduce((sum, len) => sum + len, 0) / paragraphLengths.length;
-            paragraphLengthVariance = Math.sqrt(
-                paragraphLengths.reduce((sum, len) => sum + Math.pow(len - mean, 2), 0) / paragraphLengths.length
-            ) / mean; // Normalized variance
-        }
-        
-        // Repetition analysis (repeated phrases may indicate AI)
-        const threeGrams = [];
-        const tokens = normalizedText.split(/\s+/);
-        for (let i = 0; i < tokens.length - 2; i++) {
-            threeGrams.push(`${tokens[i]} ${tokens[i+1]} ${tokens[i+2]}`);
-        }
-        
-        const uniqueThreeGrams = new Set(threeGrams);
-        const threeGramRepetitionRatio = threeGrams.length > 0 ? 
-            1 - (uniqueThreeGrams.size / threeGrams.length) : 0;
-        
-        // First-person usage (more common in human writing)
-        const firstPersonCount = (normalizedText.match(/\b(i|me|my|mine|myself|we|us|our|ours|ourselves)\b/g) || []).length;
-        const firstPersonRatio = firstPersonCount / wordCount;
-        
-        // Function words ratio (often more balanced in human text)
-        const functionWords = (normalizedText.match(/\b(the|of|and|a|to|in|is|you|that|it|he|was|for|on|are|as|with|his|they|at|be|this|have|from|or|one|had|by|but|not|what|all|were|we|when|your|can|said|there|use|an|each|which|she|do|how|their|if|will|up|other|about|out|many|then|them|these|so|some|her|would|make|like|him|into|time|has|look|two|more|go|see|no|way|could|people|my|than|first|been|call|who|its|now|find|long|down|day|did|get|come|made|may|part)\b/g) || []).length;
-        const functionWordsRatio = functionWords / wordCount;
-        
-        return {
-            // Basic text statistics
-            wordCount,
-            sentenceCount,
-            avgWordLength,
-            avgSentenceLength,
-            avgParagraphLength,
-            lexicalDiversity,
-            
-            // AI pattern metrics
-            aiPhraseRatio: aiPhraseCount / Math.max(1, sentenceCount),
-            aiStarterRatio: aiStarterCount / Math.max(1, sentenceCount),
-            aiStructureRatio: aiStructureMatches / Math.max(1, paragraphs.length),
-            
-            // Human pattern metrics
-            informalExprRatio: informalExprCount / wordCount,
-            contractionRatio: contractionCount / wordCount,
-            informalPunctRatio: informalPunctCount / Math.max(1, sentenceCount),
-            
-            // Consistency and variation metrics
-            paragraphLengthVariance,
-            threeGramRepetitionRatio,
-            
-            // Personal voice metrics
-            firstPersonRatio,
-            functionWordsRatio
-        };
-    }
+        // Stylistic features
+        burstiness: { weight: 0.17, aiThreshold: 0.32 },
+        entropyScore: { weight: 0.16, aiThreshold: 0.7 },
+        perplexityEstimate: { weight: 0.19, aiThreshold: 65 }
+    };
     
-    // Calculate AI probability based on extracted features
-    function calculateAIProbability(features) {
-        // Weights for different features (would ideally be learned from training data)
-        const weights = {
-            // Text structure features (positive = more likely AI)
-            avgSentenceLength: 0.015,         // Longer sentences → more AI-like
-            avgParagraphLength: 0.005,        // Longer paragraphs → more AI-like
-            paragraphLengthVariance: -0.8,    // More variance → more human-like
-            
-            // Vocabulary features
-            lexicalDiversity: -0.4,           // More diverse vocabulary → more human-like
-            threeGramRepetitionRatio: 1.2,    // More repetition → more AI-like
-            
-            // AI pattern metrics 
-            aiPhraseRatio: 2.0,               // More AI phrases → more AI-like
-            aiStarterRatio: 1.8,              // More AI sentence starters → more AI-like
-            aiStructureRatio: 1.5,            // More AI structure patterns → more AI-like
-            
-            // Human pattern metrics
-            informalExprRatio: -2.0,          // More informal expressions → more human-like
-            contractionRatio: -1.5,           // More contractions → more human-like
-            informalPunctRatio: -1.8,         // More informal punctuation → more human-like
-            firstPersonRatio: -1.2,           // More first-person usage → more human-like
-            functionWordsRatio: -0.5          // More balanced function words → more human-like
-        };
-        
-        // Base score (calibration point)
-        let score = 0.5;
-        
-        // Apply weighted features
-        for (const [feature, weight] of Object.entries(weights)) {
-            if (features[feature] !== undefined) {
-                score += features[feature] * weight;
-            }
+    // AI model feature detection patterns (simulated dataset patterns)
+    const aiPatterns = {
+        repetitivePatterns: [
+            /(?:\b\w+\b)(?:\s+\w+){0,5}\s+\1(?:\s+\w+){0,5}\s+\1/gi,
+            /(?:\b\w+\s+\w+\b)(?:\s+\w+){0,10}\s+\1/gi
+        ],
+        commonPhrases: [
+            /it is important to note that/i,
+            /in conclusion,/i,
+            /on the one hand.*?on the other hand/i,
+            /this raises the question/i,
+            /needless to say/i
+        ],
+        predictableStructures: [
+            /firstly.*?secondly.*?finally/i,
+            /in summary/i,
+            /to summarize/i
+        ],
+        wordChoicePatterns: {
+            formalityMarkers: ['therefore', 'thus', 'hence', 'consequently', 'subsequently'],
+            hedgingTerms: ['relatively', 'generally', 'typically', 'usually', 'often', 'sometimes']
         }
-        
-        // Text length adjustment: very short texts are harder to classify
-        const lengthFactor = Math.min(1, features.wordCount / 100);
-        
-        // Adjust score based on text length
-        score = (score * lengthFactor) + (0.5 * (1 - lengthFactor));
-        
-        // Constrain to [0, 1] range
-        return Math.max(0, Math.min(1, score));
-    }
+    };
     
-    // Analyze text and determine AI vs. human probability
-    async function analyzeText(text) {
-        try {
-            // Extract linguistic features
-            const features = extractFeatures(text);
-            
-            if (!features) {
-                return {
-                    aiProbability: 0.5,
-                    humanProbability: 0.5,
-                    confidence: 0,
-                    features: null,
-                    error: "No valid text to analyze"
-                };
-            }
-            
-            // Calculate AI probability
-            const aiProbability = calculateAIProbability(features);
-            
-            // Calculate confidence
-            const confidence = Math.abs(aiProbability - 0.5) * 2; // 0-1 scale, where 1 is high confidence
-            
-            return {
-                aiProbability,
-                humanProbability: 1 - aiProbability,
-                confidence,
-                features,
-                error: null
-            };
-        } catch (error) {
-            console.error("Analysis error:", error);
-            return {
-                aiProbability: 0.5,
-                humanProbability: 0.5,
-                confidence: 0,
-                features: null,
-                error: error.message
-            };
-        }
-    }
+    // Human writing feature detection (simulated dataset patterns)
+    const humanPatterns = {
+        informalMarkers: [
+            /(?:!|\?){2,}/,  // Multiple exclamation or question marks
+            /\bi('m| am)\b/i,  // First person usage
+            /\byou know\b/i,
+            /\bkinda\b/i,
+            /\bsort of\b/i
+        ],
+        inconsistentPunctuation: /([.!?])\s+\w+([,.!?;:])/,
+        sentenceLengthVariation: true,  // Analyzed in code
+        colloquialisms: ['gonna', 'wanna', 'sorta', 'kinda', 'stuff', 'thing', 'basically'],
+        subjectivityMarkers: ['think', 'feel', 'believe', 'opinion', 'seems', 'appears']
+    };
     
-    // Generate detailed analysis explanation
-    function generateAnalysisExplanation(result) {
-        if (!result.features) return "Insufficient text for detailed analysis.";
-        
-        const f = result.features;
-        const aiProb = result.aiProbability;
-        
-        let explanation = "";
-        
-        // Overall classification
-        if (aiProb > 0.8) {
-            explanation += "This content appears to be primarily AI-generated. ";
-        } else if (aiProb > 0.6) {
-            explanation += "This content shows strong indicators of AI generation, possibly with some human editing. ";
-        } else if (aiProb > 0.4) {
-            explanation += "This content shows mixed characteristics, making it difficult to determine if it's AI or human-written. ";
-        } else if (aiProb > 0.2) {
-            explanation += "This content appears to be primarily human-written, with possible AI assistance. ";
-        } else {
-            explanation += "This content shows strong indicators of human authorship. ";
-        }
-        
-        // Statistics summary
-        explanation += `The text contains ${f.wordCount} words across ${f.sentenceCount} sentences`;
-        
-        if (f.sentenceCount > 0) {
-            explanation += ` with an average of ${Math.round(f.avgSentenceLength)} words per sentence. `;
-        } else {
-            explanation += ". ";
-        }
-        
-        // Top indicators for classification
-        explanation += "Key indicators: ";
-        
-        const indicators = [];
-        
-        // AI indicators
-        if (f.aiPhraseRatio > 0.1) {
-            indicators.push(`frequent use of formal transition phrases (${Math.round(f.aiPhraseRatio * 100)}% of sentences)`);
-        }
-        
-        if (f.aiStarterRatio > 0.1) {
-            indicators.push(`formulaic sentence starters (${Math.round(f.aiStarterRatio * 100)}% of sentences)`);
-        }
-        
-        if (f.avgSentenceLength > 25) {
-            indicators.push(`unusually long sentences (avg ${Math.round(f.avgSentenceLength)} words)`);
-        }
-        
-        if (f.threeGramRepetitionRatio > 0.2) {
-            indicators.push("repetitive phrasing patterns");
-        }
-        
-        if (f.paragraphLengthVariance < 0.3 && f.wordCount > 200) {
-            indicators.push("unusually consistent paragraph structure");
-        }
-        
-        // Human indicators
-        if (f.contractionRatio > 0.05) {
-            indicators.push(`frequent use of contractions (${Math.round(f.contractionRatio * 100)}% of words)`);
-        }
-        
-        if (f.informalExprRatio > 0.01) {
-            indicators.push("casual/conversational language markers");
-        }
-        
-        if (f.informalPunctRatio > 0.1) {
-            indicators.push("varied/informal punctuation patterns");
-        }
-        
-        if (f.firstPersonRatio > 0.05) {
-            indicators.push("significant first-person perspective");
-        }
-        
-        if (indicators.length === 0) {
-            explanation += "balanced text features without strong indicators in either direction.";
-        } else {
-            explanation += indicators.join(", ") + ".";
-        }
-        
-        return explanation;
-    }
+    // Database of rare words (abbreviated example)
+    const rareWords = new Set([
+        'abstruse', 'acumen', 'adumbrate', 'ameliorate', 'apocryphal', 'apotheosis', 'archetype',
+        'beguile', 'bereft', 'blandishment', 'bombastic', 'bucolic', 'cacophony', 'capricious', 
+        'denouement', 'derivative', 'didactic', 'disparate', 'ebullient', 'efficacious', 'effrontery', 
+        'egregious', 'ephemeral', 'equivocate', 'ersatz', 'erudite', 'esoteric', 'fastidious',
+        'garrulous', 'grandiloquent', 'hackneyed', 'hegemony', 'hermeneutic', 'iconoclast',
+        'idiosyncratic', 'inculcate', 'inimitable', 'insipid', 'intransigent', 'inveterate',
+        'juxtaposition', 'loquacious', 'mellifluous', 'mendacious', 'meretricious', 'munificent',
+        'nebulous', 'obstreperous', 'parsimonious', 'pedantic', 'perfunctory', 'pernicious',
+        'perspicacious', 'prescient', 'propitious', 'puerile', 'querulous', 'quixotic',
+        'recalcitrant', 'redoubtable', 'sagacious', 'sedulous', 'solipsistic', 'sophomoric',
+        'sycophantic', 'tautological', 'tenuous', 'truculent', 'ubiquitous', 'verisimilitude',
+        'vituperate', 'vociferous', 'winsome', 'zealous'
+    ]);
     
-    // Format percentage for display
-    function formatPercentage(value) {
-        return Math.round(value * 100) + '%';
-    }
-    
-    // Handle the analysis when the button is clicked
-    analyzeBtn.addEventListener('click', async function() {
+    // Common transition words to measure diversity
+    const transitionWords = [
+        'however', 'therefore', 'consequently', 'furthermore', 'moreover', 'nevertheless',
+        'nonetheless', 'similarly', 'conversely', 'meanwhile', 'subsequently', 'specifically',
+        'notably', 'indeed', 'additionally', 'likewise', 'instead', 'thus', 'still', 'besides',
+        'accordingly', 'certainly', 'hence', 'alternatively', 'otherwise', 'ultimately'
+    ];
+
+    // Run the analysis when the button is clicked
+    analyzeBtn.addEventListener('click', function() {
         const text = contentInput.value.trim();
         
-        if (text.length < 50) {
-            alert("Please enter at least 50 characters for accurate analysis.");
+        if (text.length < 100) {
+            alert('Please enter at least 100 characters for accurate analysis.');
             return;
         }
         
@@ -497,31 +144,352 @@ document.addEventListener('DOMContentLoaded', function() {
         loadingIndicator.style.display = 'block';
         resultSection.style.display = 'none';
         
-        // Initialize the model if not already done
-        if (!model) {
-            await initModel();
-        }
-        
-        // Simulate loading/processing delay for larger texts
-        setTimeout(async function() {
-            // Get analysis results
-            const result = await analyzeText(text);
-            
-            // Update the UI with results
-            humanGauge.style.width = formatPercentage(result.humanProbability);
-            aiGauge.style.width = formatPercentage(result.aiProbability);
-            humanPercentage.textContent = formatPercentage(result.humanProbability);
-            aiPercentage.textContent = formatPercentage(result.aiProbability);
-            
-            // Generate content summary
-            contentSummary.textContent = generateAnalysisExplanation(result);
-            
-            // Hide loading and show results
+        // Simulate loading delay
+        setTimeout(() => {
+            analyzeContent(text);
             loadingIndicator.style.display = 'none';
             resultSection.style.display = 'block';
-        }, Math.min(1500, Math.max(500, text.length / 10))); // Simulate processing time based on text length
+        }, 1500);
     });
     
-    // Initialize on page load
-    initModel();
+    // Advanced content analysis function using simulated dataset patterns
+    function analyzeContent(text) {
+        // Extract text features
+        const features = extractTextFeatures(text);
+        
+        // Calculate AI score based on model weights and extracted features
+        let aiScore = calculateAIScore(features);
+        
+        // Ensure score is within bounds
+        aiScore = Math.max(5, Math.min(95, aiScore));
+        const humanScore = 100 - aiScore;
+        
+        // Update the gauges
+        updateGauges(humanScore, aiScore);
+        
+        // Update analysis text with detailed breakdown
+        updateAnalysisText(features, aiScore);
+    }
+    
+    function extractTextFeatures(text) {
+        // Prepare text for analysis
+        const words = text.match(/\b\w+\b/g) || [];
+        const uniqueWords = new Set(words.map(w => w.toLowerCase()));
+        const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+        const paragraphs = text.split(/\n\s*\n|\r\n\s*\r\n/).filter(p => p.trim().length > 0);
+        const characters = text.replace(/\s/g, '').length;
+        
+        // Calculate lexical features
+        const avgWordLength = characters / words.length;
+        const uniqueWordRatio = uniqueWords.size / words.length;
+        
+        // Calculate rarity score
+        let rareWordCount = 0;
+        words.forEach(word => {
+            if (rareWords.has(word.toLowerCase())) rareWordCount++;
+        });
+        const rarityScore = rareWordCount / words.length;
+        
+        // Calculate syntactic features
+        const avgSentenceLength = words.length / sentences.length;
+        const punctuationCount = (text.match(/[.!?,;:]/g) || []).length;
+        const punctuationRatio = punctuationCount / words.length;
+        
+        // Calculate syntactic complexity (simple approximation)
+        const complexSentences = sentences.filter(s => 
+            s.includes(',') || s.includes(';') || s.includes(':') || 
+            /\b(although|however|therefore|nevertheless|despite|while|whereas)\b/i.test(s)
+        ).length;
+        const syntaxComplexity = complexSentences / sentences.length;
+        
+        // Calculate paragraph consistency
+        const paragraphLengths = paragraphs.map(p => p.split(/\s+/).length);
+        const paragraphMean = paragraphLengths.reduce((sum, len) => sum + len, 0) / paragraphLengths.length;
+        const paragraphVariance = paragraphLengths.reduce((sum, len) => sum + Math.pow(len - paragraphMean, 2), 0) / paragraphLengths.length;
+        const paragraphConsistency = 1 - (Math.sqrt(paragraphVariance) / paragraphMean);
+        
+        // Calculate transition word diversity
+        let transitionCount = 0;
+        let uniqueTransitions = new Set();
+        transitionWords.forEach(word => {
+            const regex = new RegExp('\\b' + word + '\\b', 'gi');
+            const matches = text.match(regex) || [];
+            transitionCount += matches.length;
+            if (matches.length > 0) uniqueTransitions.add(word.toLowerCase());
+        });
+        const transitionDiversity = transitionCount > 0 ? uniqueTransitions.size / transitionCount : 0;
+        
+        // Calculate burstiness (variation in word usage)
+        const wordFreq = {};
+        words.forEach(word => {
+            const lword = word.toLowerCase();
+            wordFreq[lword] = (wordFreq[lword] || 0) + 1;
+        });
+        const wordFreqValues = Object.values(wordFreq);
+        const freqMean = wordFreqValues.reduce((sum, freq) => sum + freq, 0) / wordFreqValues.length;
+        const freqVariance = wordFreqValues.reduce((sum, freq) => sum + Math.pow(freq - freqMean, 2), 0) / wordFreqValues.length;
+        const burstiness = Math.sqrt(freqVariance) / freqMean;
+        
+        // Calculate entropy (approximation)
+        const wordProbs = wordFreqValues.map(freq => freq / words.length);
+        const entropy = wordProbs.reduce((sum, prob) => sum - (prob * Math.log2(prob)), 0);
+        const maxEntropy = Math.log2(uniqueWords.size);
+        const entropyScore = entropy / maxEntropy;
+        
+        // AI pattern detection
+        let aiPatternMatches = 0;
+        
+        // Check for repetitive patterns
+        aiPatterns.repetitivePatterns.forEach(pattern => {
+            const matches = text.match(pattern) || [];
+            aiPatternMatches += matches.length;
+        });
+        
+        // Check for common AI phrases
+        aiPatterns.commonPhrases.forEach(pattern => {
+            if (pattern.test(text)) aiPatternMatches++;
+        });
+        
+        // Check for predictable structures
+        aiPatterns.predictableStructures.forEach(pattern => {
+            if (pattern.test(text)) aiPatternMatches++;
+        });
+        
+        // Check for formal/hedging word choices
+        let formalityCount = 0;
+        aiPatterns.wordChoicePatterns.formalityMarkers.forEach(word => {
+            const regex = new RegExp('\\b' + word + '\\b', 'gi');
+            formalityCount += (text.match(regex) || []).length;
+        });
+        
+        let hedgingCount = 0;
+        aiPatterns.wordChoicePatterns.hedgingTerms.forEach(word => {
+            const regex = new RegExp('\\b' + word + '\\b', 'gi');
+            hedgingCount += (text.match(regex) || []).length;
+        });
+        
+        // Human pattern detection
+        let humanPatternMatches = 0;
+        
+        // Check for informal markers
+        humanPatterns.informalMarkers.forEach(pattern => {
+            if (pattern.test(text)) humanPatternMatches++;
+        });
+        
+        // Check for inconsistent punctuation
+        if (humanPatterns.inconsistentPunctuation.test(text)) humanPatternMatches++;
+        
+        // Check for sentence length variation
+        const sentenceLengths = sentences.map(s => s.split(/\s+/).length);
+        const sentenceMean = sentenceLengths.reduce((sum, len) => sum + len, 0) / sentenceLengths.length;
+        const sentenceVariance = sentenceLengths.reduce((sum, len) => sum + Math.pow(len - sentenceMean, 2), 0) / sentenceLengths.length;
+        const sentenceLengthVariation = Math.sqrt(sentenceVariance) / sentenceMean;
+        if (sentenceLengthVariation > 0.5) humanPatternMatches++;
+        
+        // Check for colloquialisms
+        let colloquialismCount = 0;
+        humanPatterns.colloquialisms.forEach(word => {
+            const regex = new RegExp('\\b' + word + '\\b', 'gi');
+            colloquialismCount += (text.match(regex) || []).length;
+        });
+        if (colloquialismCount > 0) humanPatternMatches++;
+        
+        // Check for subjectivity markers
+        let subjectivityCount = 0;
+        humanPatterns.subjectivityMarkers.forEach(word => {
+            const regex = new RegExp('\\b' + word + '\\b', 'gi');
+            subjectivityCount += (text.match(regex) || []).length;
+        });
+        if (subjectivityCount > 0) humanPatternMatches++;
+        
+        // Calculate perplexity estimate (simplified approximation)
+        // In a real implementation, this would use an actual language model
+        const wordBigramMap = new Map();
+        for (let i = 0; i < words.length - 1; i++) {
+            const bigram = `${words[i].toLowerCase()} ${words[i + 1].toLowerCase()}`;
+            wordBigramMap.set(bigram, (wordBigramMap.get(bigram) || 0) + 1);
+        }
+        
+        const bigramProbs = Array.from(wordBigramMap.values()).map(count => count / (words.length - 1));
+        const bigramEntropy = bigramProbs.reduce((sum, prob) => sum - (prob * Math.log2(prob)), 0);
+        const perplexityEstimate = Math.pow(2, bigramEntropy);
+        
+        return {
+            // Lexical features
+            avgWordLength,
+            uniqueWordRatio,
+            rarityScore,
+            
+            // Syntactic features
+            avgSentenceLength,
+            syntaxComplexity,
+            punctuationRatio,
+            
+            // Structural features
+            paragraphConsistency,
+            transitionDiversity,
+            
+            // Stylistic features
+            burstiness,
+            entropyScore,
+            perplexityEstimate,
+            
+            // Pattern matches
+            aiPatternMatches,
+            humanPatternMatches,
+            formalityCount: formalityCount / words.length,
+            hedgingCount: hedgingCount / words.length,
+            colloquialismCount: colloquialismCount / words.length,
+            subjectivityCount: subjectivityCount / words.length,
+            sentenceLengthVariation,
+            
+            // Raw counts for reporting
+            wordCount: words.length,
+            sentenceCount: sentences.length,
+            paragraphCount: paragraphs.length,
+            uniqueWordCount: uniqueWords.size
+        };
+    }
+    
+    function calculateAIScore(features) {
+        let score = 50; // Start with neutral
+        
+        // Apply model weights to features
+        Object.keys(modelWeights).forEach(feature => {
+            if (feature in features) {
+                const { weight, aiThreshold } = modelWeights[feature];
+                const featureValue = features[feature];
+                
+                // Higher score means more likely AI
+                if (feature === 'uniqueWordRatio' || feature === 'burstiness' || 
+                    feature === 'entropyScore' || feature === 'transitionDiversity' || 
+                    feature === 'rarityScore') {
+                    // For these features, lower values suggest AI
+                    score += (featureValue < aiThreshold) ? weight * 100 : -weight * 100;
+                } else if (feature === 'perplexityEstimate') {
+                    // Lower perplexity suggests AI (more predictable text)
+                    score += (featureValue < aiThreshold) ? weight * 100 : -weight * 100;
+                } else {
+                    // For other features, higher values suggest AI
+                    score += (featureValue > aiThreshold) ? weight * 100 : -weight * 100;
+                }
+            }
+        });
+        
+        // Adjust for pattern matches
+        score += features.aiPatternMatches * 2;
+        score -= features.humanPatternMatches * 2;
+        
+        // Final adjustments based on other indicators
+        if (features.formalityCount > 0.05) score += 5;
+        if (features.hedgingCount > 0.03) score += 5;
+        if (features.colloquialismCount > 0.01) score -= 8;
+        if (features.subjectivityCount > 0.02) score -= 8;
+        if (features.sentenceLengthVariation > 0.6) score -= 10;
+        
+        return score;
+    }
+    
+    function updateAnalysisText(features, aiScore) {
+        // Determine primary classification
+        let classification, confidence;
+        
+        if (aiScore > 75) {
+            classification = "Highly likely AI-generated";
+            confidence = "high";
+        } else if (aiScore > 60) {
+            classification = "Likely AI-generated";
+            confidence = "moderate";
+        } else if (aiScore > 40) {
+            classification = "Mixed or uncertain";
+            confidence = "low";
+        } else if (aiScore > 25) {
+            classification = "Likely human-written";
+            confidence = "moderate";
+        } else {
+            classification = "Highly likely human-written";
+            confidence = "high";
+        }
+        
+        // Create detailed analysis
+        let keyIndicators = [];
+        
+        // Add indicators based on features
+        if (features.paragraphConsistency > 0.85) 
+            keyIndicators.push("Unusually consistent paragraph structure");
+        if (features.uniqueWordRatio < 0.4) 
+            keyIndicators.push("Low lexical diversity");
+        if (features.sentenceLengthVariation < 0.3) 
+            keyIndicators.push("Highly consistent sentence lengths");
+        if (features.burstiness < 0.25) 
+            keyIndicators.push("Lack of natural word usage variation");
+        if (features.aiPatternMatches > 3) 
+            keyIndicators.push("Contains multiple AI-typical phrases or patterns");
+        if (features.rarityScore < 0.01) 
+            keyIndicators.push("Absence of rare or unusual vocabulary");
+        if (features.formalityCount > 0.05) 
+            keyIndicators.push("Heavy use of formal transition words");
+        if (features.hedgingCount > 0.04) 
+            keyIndicators.push("Frequent hedging language");
+        
+        // Add human indicators
+        if (features.humanPatternMatches > 3) 
+            keyIndicators.push("Contains multiple human-typical writing patterns");
+        if (features.colloquialismCount > 0.01) 
+            keyIndicators.push("Uses casual language and colloquialisms");
+        if (features.subjectivityCount > 0.03) 
+            keyIndicators.push("Contains subjective expressions and opinions");
+        if (features.sentenceLengthVariation > 0.7) 
+            keyIndicators.push("Highly varied sentence structures");
+        
+        // Set HTML with detailed analysis
+        analysisText.innerHTML = `
+            <h3>${classification} (${confidence} confidence)</h3>
+            <p><b>Analysis based on multiple linguistic features extracted from the text:</b></p>
+            <ul>
+                <li>Word count: ${features.wordCount}</li>
+                <li>Unique words: ${features.uniqueWordCount} (${(features.uniqueWordRatio * 100).toFixed(1)}% unique)</li>
+                <li>Avg. word length: ${features.avgWordLength.toFixed(2)} characters</li>
+                <li>Vocabulary diversity: ${features.entropyScore.toFixed(2)}</li>
+                <li>Structural consistency: ${features.paragraphConsistency.toFixed(2)}</li>
+            </ul>
+            ${keyIndicators.length > 0 ? `
+                <p><strong>Key indicators:</strong></p>
+                <ul>
+                    ${keyIndicators.map(indicator => `<li>${indicator}</li>`).join('')}
+                </ul>
+            ` : ''}
+        `;
+    }
+    
+    // Update the gauge visuals based on scores
+    function updateGauges(humanScore, aiScore) {
+        // Animate the gauges
+        setTimeout(() => {
+            humanGauge.style.width = `${humanScore}%`;
+            aiGauge.style.width = `${aiScore}%`;
+        }, 100);
+        
+        // Update percentage text with animation
+        animateCounter(humanPercentage, 0, Math.round(humanScore));
+        animateCounter(aiPercentage, 0, Math.round(aiScore));
+    }
+    
+    // Animate counter from start to end value
+    function animateCounter(element, start, end) {
+        let current = start;
+        const increment = end > start ? 1 : -1;
+        const stepTime = 1000 / Math.abs(end - start);
+        
+        const timer = setInterval(() => {
+            current += increment;
+            element.textContent = `${current}%`;
+            
+            if ((increment > 0 && current >= end) || (increment < 0 && current <= end)) {
+                clearInterval(timer);
+                element.textContent = `${end}%`;
+            }
+        }, stepTime);
+    }
+	});
 });
