@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EndGPT - AI Content Detector</title>
     
-        <link rel="icon" type="image/png" sizes="192x192" href="/ico/android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/ico/android-chrome-192x192.png">
     <link rel="icon" type="image/png" sizes="512x512" href="/ico/android-chrome-512x512.png">
     <link rel="apple-touch-icon" sizes="180x180" href="/ico/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/ico/favicon-16x16.png">
@@ -16,6 +16,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.15.0/dist/tf.min.js"></script>
     <style>
 :root {
+    /* Dark Mode Variables */
     --bg-primary: rgba(18, 20, 25, 1);
     --bg-glass: rgba(30, 33, 43, 0.6);
     --bg-glass-hover: rgba(30, 33, 43, 0.8);
@@ -28,10 +29,14 @@
     --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
     --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.3);
     --shadow-lg: 0 16px 50px rgba(0, 0, 0, 0.4);
+    --border-light: 1px solid rgba(255, 255, 255, 0.1);
+    --textarea-bg: rgba(40, 44, 52, 0.8);
+    --gauge-bg: rgba(40, 44, 52, 0.5);
+    --analysis-bg: rgba(40, 44, 52, 0.5);
+    
     --border-radius-sm: 12px;
     --border-radius-md: 18px;
     --border-radius-lg: 24px;
-    --border-light: 1px solid rgba(255, 255, 255, 0.1);
     --space-1: 0.5rem;
     --space-2: 1rem;
     --space-3: 1.5rem;
@@ -61,10 +66,15 @@ body {
     flex-direction: column;
     align-items: center;
     background-image: 
-        radial-gradient(circle at 20% 35%, rgba(76, 175, 255, 0.15) 0%, rgba(76, 175, 255, 0) 25%),
-        radial-gradient(circle at 75% 70%, rgba(255, 149, 0, 0.08) 0%, rgba(255, 149, 0, 0) 25%);
+        radial-gradient(circle at 20% 35%, rgba(10, 132, 255, 0.1) 0%, rgba(10, 132, 255, 0) 25%),
+        radial-gradient(circle at 75% 70%, rgba(255, 159, 10, 0.05) 0%, rgba(255, 159, 10, 0) 25%);
     background-attachment: fixed;
     overflow-x: hidden;
+    transition: background-color var(--anim-medium) ease;
+}
+
+li {
+	 margin-left: var(--space-2)
 }
 
 .main-container {
@@ -140,7 +150,8 @@ header {
     box-shadow: var(--shadow-md);
     overflow: hidden;
     transition: transform var(--anim-medium) cubic-bezier(0.34, 1.56, 0.64, 1), 
-                box-shadow var(--anim-medium) cubic-bezier(0.34, 1.56, 0.64, 1);
+                box-shadow var(--anim-medium) cubic-bezier(0.34, 1.56, 0.64, 1),
+                background var(--anim-medium) ease;
     animation: cardAppear var(--anim-slow) cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
 }
 
@@ -191,7 +202,7 @@ textarea {
     width: 100%;
     min-height: 220px;
     padding: var(--space-3);
-    background: rgba(40, 44, 52, 0.8);
+    background: var(--textarea-bg);
     border: var(--border-light);
     border-radius: var(--border-radius-md);
     font-size: 1rem;
@@ -226,7 +237,7 @@ textarea:focus {
     font-weight: 600;
     cursor: pointer;
     transition: all var(--anim-medium) cubic-bezier(0.34, 1.56, 0.64, 1);
-    box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+    box-shadow: 0 4px 12px rgba(10, 132, 255, 0.4);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -248,7 +259,7 @@ textarea:focus {
 
 .analyze-btn:hover {
     transform: translateY(-4px) scale(1.03);
-    box-shadow: 0 8px 20px rgba(0, 122, 255, 0.4);
+    box-shadow: 0 8px 20px rgba(10, 132, 255, 0.5);
 }
 
 .analyze-btn:hover::before {
@@ -257,7 +268,7 @@ textarea:focus {
 
 .analyze-btn:active {
     transform: translateY(0) scale(0.98);
-    box-shadow: 0 2px 8px rgba(0, 122, 255, 0.3);
+    box-shadow: 0 2px 8px rgba(10, 132, 255, 0.4);
 }
 
 .loading {
@@ -274,7 +285,7 @@ textarea:focus {
     display: inline-block;
     width: 40px;
     height: 40px;
-    border: 3px solid rgba(0, 122, 255, 0.2);
+    border: 3px solid rgba(10, 132, 255, 0.2);
     border-radius: 50%;
     border-top-color: var(--accent-blue);
     animation: spin 1s linear infinite;
@@ -301,6 +312,10 @@ textarea:focus {
     gap: var(--space-1);
 }
 
+.result-title svg path {
+    fill: var(--accent-blue);
+}
+
 .gauge-container {
     display: flex;
     justify-content: space-between;
@@ -315,7 +330,7 @@ textarea:focus {
     gap: var(--space-1);
     position: relative;
     padding: var(--space-3);
-    background: rgba(40, 44, 52, 0.5);
+    background: var(--gauge-bg);
     border-radius: var(--border-radius-md);
     border: var(--border-light);
     box-shadow: var(--shadow-sm);
@@ -364,7 +379,7 @@ textarea:focus {
 
 .gauge-visual {
     height: 10px;
-    background-color: rgba(0, 0, 0, 0.06);
+    background-color: rgba(255, 255, 255, 0.1);
     border-radius: 10px;
     overflow: hidden;
     margin: var(--space-1) 0;
@@ -400,11 +415,11 @@ textarea:focus {
 }
 
 .human-fill {
-    background: linear-gradient(90deg, rgba(40, 180, 70, 1) 0%, rgba(52, 199, 89, 1) 100%);
+    background: linear-gradient(90deg, rgba(40, 180, 70, 1) 0%, rgba(48, 209, 88, 1) 100%);
 }
 
 .ai-fill {
-    background: linear-gradient(90deg, rgba(255, 140, 0, 1) 0%, rgba(255, 160, 10, 1) 100%);
+    background: linear-gradient(90deg, rgba(255, 140, 0, 1) 0%, rgba(255, 159, 10, 1) 100%);
 }
 
 .gauge-percentage {
@@ -429,12 +444,13 @@ textarea:focus {
 }
 
 .analysis-details {
-    background: rgba(40, 44, 52, 0.5);
+    background: var(--analysis-bg);
     padding: var(--space-4);
     border-radius: var(--border-radius-md);
     border: var(--border-light);
     margin-top: var(--space-2);
-    transition: transform var(--anim-medium) ease, box-shadow var(--anim-medium) ease;
+    transition: transform var(--anim-medium) ease, 
+                box-shadow var(--anim-medium) ease;
 }
 
 .analysis-details:hover {
@@ -483,30 +499,34 @@ footer {
 }
 
 .tooltip .tooltip-text {
-        width: 80%;
-        max-width: 300px;
-        min-height: fit-content; /* Allow height to fit content */
-        max-height: 80vh; /* Prevent it from getting larger than 80% of viewport height */
-        overflow-y: auto; /* Add scrolling if content exceeds max-height */
-        font-size: 0.85rem;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) scale(0.9);
-        z-index: 1000;
-        box-shadow: 0 0 30px rgba(0, 0, 0, 0.25);
-        padding: var(--space-2);
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        margin: 0;
-    	  background: rgba(22, 23, 47, 0.95);
-        color: white;
-        text-align: center;
-        border-radius: 8px;
-transition: opacity var(--anim-medium) ease, transform var(--anim-medium) cubic-bezier(0.34, 1.56, 0.64, 1), visibility var(--anim-medium) ease;
-			visibility: hidden;
-		   opacity: 0;
+    width: 80%;
+    max-width: 300px;
+    min-height: fit-content;
+    max-height: 80vh;
+    overflow-y: auto;
+    font-size: 0.85rem;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    z-index: 1000;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
+    padding: var(--space-2);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 0;
+    background: rgba(50, 55, 70, 0.95);
+    color: white;
+    text-align: center;
+    border-radius: 8px;
+    transition: opacity var(--anim-medium) ease, transform var(--anim-medium) cubic-bezier(0.34, 1.56, 0.64, 1), visibility var(--anim-medium) ease;
+    visibility: hidden;
+    opacity: 0;
+}
+
+.tooltip svg path {
+    fill: var(--text-secondary);
 }
 
 .tooltip:hover .tooltip-text {
@@ -514,6 +534,123 @@ transition: opacity var(--anim-medium) ease, transform var(--anim-medium) cubic-
     opacity: 1;
     transform: translate(-50%, -50%) scale(1);
 }
+
+/* Enhanced decorative elements */
+.blob {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: -1;
+    opacity: 0.4;
+    transition: all 8s ease;
+}
+
+.blob-1 {
+    width: 600px;
+    height: 600px;
+    background: rgba(10, 132, 255, 0.1);
+    top: -300px;
+    right: -200px;
+    animation: blobFloat 20s infinite alternate;
+}
+
+.blob-2 {
+    width: 500px;
+    height: 500px;
+    background: rgba(48, 209, 88, 0.08);
+    bottom: -250px;
+    left: -150px;
+    animation: blobFloat 15s infinite alternate-reverse;
+}
+
+@keyframes blobFloat {
+    0% {
+        transform: translate(0, 0) scale(1);
+    }
+    33% {
+        transform: translate(50px, -30px) scale(1.05);
+    }
+    66% {
+        transform: translate(-20px, 40px) scale(0.95);
+    }
+    100% {
+        transform: translate(30px, 10px) scale(1.02);
+    }
+}
+
+/* Enhancing interactive states */
+.glass-card, .gauge, .analysis-details, .analyze-btn {
+    will-change: transform, box-shadow;
+}
+
+/* Page load sequence */
+@keyframes pageLoad {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+body {
+    animation: pageLoad 0.6s ease-out;
+}
+
+/* Add subtle parallax effect on mouse move */
+body {
+    perspective: 1000px;
+}
+
+.glass-card {
+    transform-style: preserve-3d;
+    transition: transform 0.1s ease;
+}
+
+/* Basic Link Style */
+a {
+    color: var(--accent-blue);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color var(--anim-fast), transform var(--anim-medium);
+}
+
+/* Link Hover State */
+a:hover {
+    color: var(--accent-blue);
+    text-decoration: underline;
+    transform: translateY(-2px);
+}
+
+/* Link Active State */
+a:active {
+    color: var(--accent-blue);
+    transform: translateY(0);
+}
+
+/* Link Visited State */
+a:visited {
+    color: var(--text-primary);
+    text-decoration: underline;
+    transform: translateY(0);
+}
+
+/* Adding a subtle animation effect when a link appears */
+a {
+    animation: fadeInLink 0.4s ease-out;
+}
+
+@keyframes fadeInLink {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Small screens adjustment */
+@media (max-width: 480px) {
     :root {
         --space-3: 1rem;
         --space-4: 1.5rem;
@@ -575,134 +712,19 @@ transition: opacity var(--anim-medium) ease, transform var(--anim-medium) cubic-
     .analysis-text {
         font-size: 1rem;
     }
-
-/* Small screens adjustment */
-@media (max-width: 480px) {
-/* Enhanced decorative elements */
-.blob {
-    position: fixed;
-    border-radius: 50%;
-    filter: blur(80px);
-    z-index: -1;
-    opacity: 0.4;
-    transition: all 8s ease;
-}
-
-.blob-1 {
-    width: 600px;
-    height: 600px;
-    background: rgba(0, 122, 255, 0.15);
-    top: -300px;
-    right: -200px;
-    animation: blobFloat 20s infinite alternate;
-}
-
-.blob-2 {
-    width: 500px;
-    height: 500px;
-    background: rgba(52, 199, 89, 0.1);
-    bottom: -250px;
-    left: -150px;
-    animation: blobFloat 15s infinite alternate-reverse;
-}
-
-@keyframes blobFloat {
-    0% {
-        transform: translate(0, 0) scale(1);
-    }
-    33% {
-        transform: translate(50px, -30px) scale(1.05);
-    }
-    66% {
-        transform: translate(-20px, 40px) scale(0.95);
-    }
-    100% {
-        transform: translate(30px, 10px) scale(1.02);
-    }
-}
-}
-
-/* Enhancing interactive states */
-.glass-card, .gauge, .analysis-details, .analyze-btn {
-    will-change: transform, box-shadow;
-}
-
-/* Page load sequence */
-@keyframes pageLoad {
-    0% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
-}
-
-body {
-    animation: pageLoad 0.6s ease-out;
-}
-
-/* Add subtle parallax effect on mouse move */
-body {
-    perspective: 1000px;
-}
-
-.glass-card {
-    transform-style: preserve-3d;
-    transition: transform 0.1s ease;
-}
-/* Basic Link Style */
-a {
-    color: var(--accent-blue);
-    text-decoration: none;
-    font-weight: 600;
-    transition: color var(--anim-fast), transform var(--anim-medium);
-}
-
-/* Link Hover State */
-a:hover {
-    color: var(--accent-blue);
-    text-decoration: underline;
-    transform: translateY(-2px);
-}
-
-/* Link Active State */
-a:active {
-    color: var(--accent-blue);
-    transform: translateY(0);
-}
-
-/* Link Visited State */
-a:visited {
-    color: var(--text-primary);
-    text-decoration: underline;
-    transform: translateY(0);
-}
-
-/* Adding a subtle animation effect when a link appears */
-a {
-    animation: fadeInLink 0.4s ease-out;
-}
-
-@keyframes fadeInLink {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
 }
     </style>
 </head>
 <body>
     <div class="blob blob-1"></div>
     <div class="blob blob-2"></div>
-    
+
     <div class="main-container">
         <header>
-<div style="padding: 0;justify-content:center;margin: 0 auto;margin-bottom: var(--space-1);display: flex; align-items: center; gap: 1rem;">
-<svg width="3.5rem" height="3.5rem" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="100" r="90" fill="url(#logoGradient)"></circle><circle cx="100" cy="100" r="85" stroke="white" stroke-width="2" stroke-dasharray="4 6" opacity="0.7"></circle><circle cx="100" cy="100" r="70" fill="url(#meshPattern)" opacity="0.2"></circle><path d="M50 80 L80 80 L90 90 L130 90 L140 80 L150 80" stroke="rgba(255,255,255,0.7)" stroke-width="2" fill="none"></path><path d="M60 120 L80 120 L90 110 L130 110 L140 120 L150 120" stroke="rgba(255,255,255,0.7)" stroke-width="2" fill="none"></path><circle cx="90" cy="90" r="3" fill="white"></circle><circle cx="130" cy="90" r="3" fill="white"></circle><circle cx="90" cy="110" r="3" fill="white"></circle><circle cx="130" cy="110" r="3" fill="white"></circle><circle cx="100" cy="100" r="10" fill="white"></circle><line x1="60" y1="140" x2="140" y2="60" stroke="white" stroke-width="4" stroke-linecap="round"><animate attributeName="stroke-dasharray" values="0,200;180,20;180,20" dur="1.5s" begin="0s" fill="freeze"/></line><defs><linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="rgba(0, 122, 255, 1)"><animate attributeName="stop-color" values="rgba(0, 122, 255, 1);rgba(20, 132, 255, 1);rgba(0, 122, 255, 1)" dur="6s" repeatCount="indefinite" begin="0s"/></stop><stop offset="100%" stop-color="rgba(144, 19, 254, 0.8)"><animate attributeName="stop-color" values="rgba(144, 19, 254, 0.8);rgba(164, 39, 254, 0.8);rgba(144, 19, 254, 0.8)" dur="6s" repeatCount="indefinite" begin="0s"/></stop></linearGradient><pattern id="meshPattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><rect x="0" y="0" width="20" height="20" fill="none"/><path d="M0 0 L20 20 M20 0 L0 20" stroke="white" stroke-width="0.5" opacity="0.3"><animate attributeName="stroke-opacity" values="0.3;0.5;0.3" dur="4s" repeatCount="indefinite" begin="0s"/></path></pattern></defs></svg>
-  <h1 class="logo">EndGPT</h1>
-</div>
+            <div style="padding: 0;justify-content:center;margin: 0 auto;margin-bottom: var(--space-1);display: flex; align-items: center; gap: 1rem;">
+                <svg width="3.5rem" height="3.5rem" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="100" r="90" fill="url(#logoGradient)"></circle><circle cx="100" cy="100" r="85" stroke="white" stroke-width="2" stroke-dasharray="4 6" opacity="0.7"></circle><circle cx="100" cy="100" r="70" fill="url(#meshPattern)" opacity="0.2"></circle><path d="M50 80 L80 80 L90 90 L130 90 L140 80 L150 80" stroke="rgba(255,255,255,0.7)" stroke-width="2" fill="none"></path><path d="M60 120 L80 120 L90 110 L130 110 L140 120 L150 120" stroke="rgba(255,255,255,0.7)" stroke-width="2" fill="none"></path><circle cx="90" cy="90" r="3" fill="white"></circle><circle cx="130" cy="90" r="3" fill="white"></circle><circle cx="90" cy="110" r="3" fill="white"></circle><circle cx="130" cy="110" r="3" fill="white"></circle><circle cx="100" cy="100" r="10" fill="white"></circle><line x1="60" y1="140" x2="140" y2="60" stroke="white" stroke-width="4" stroke-linecap="round"><animate attributeName="stroke-dasharray" values="0,200;180,20;180,20" dur="1.5s" begin="0s" fill="freeze"/></line><defs><linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="rgba(0, 122, 255, 1)"><animate attributeName="stop-color" values="rgba(0, 122, 255, 1);rgba(20, 132, 255, 1);rgba(0, 122, 255, 1)" dur="6s" repeatCount="indefinite" begin="0s"/></stop><stop offset="100%" stop-color="rgba(144, 19, 254, 0.8)"><animate attributeName="stop-color" values="rgba(144, 19, 254, 0.8);rgba(164, 39, 254, 0.8);rgba(144, 19, 254, 0.8)" dur="6s" repeatCount="indefinite" begin="0s"/></stop></linearGradient><pattern id="meshPattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><rect x="0" y="0" width="20" height="20" fill="none"/><path d="M0 0 L20 20 M20 0 L0 20" stroke="white" stroke-width="0.5" opacity="0.3"><animate attributeName="stroke-opacity" values="0.3;0.5;0.3" dur="4s" repeatCount="indefinite" begin="0s"/></path></pattern></defs></svg>
+                <h1 class="logo">EndGPT</h1>
+            </div>
             <p class="tagline">Advanced AI-generated content detection and analysis.</p>
         </header>
         
@@ -748,17 +770,16 @@ a {
                             </svg>
                             Human-Written
                         </h3>
-                        <div class="tooltip">
-                            <svg width="16" height="16" viewBox="0 0 24 24">
-                                <path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M11,16.5H13V14.5H11V16.5M12,7A3,3 0 0,1 15,10C15,11.11 14.41,11.59 13.43,12.18L13.13,12.37C12.38,12.89 12,13.38 12,14.5H11C11,13 11.53,12.33 12.46,11.68L12.87,11.42C13.59,10.94 14,10.5 14,10C14,8.89 13.1,8 12,8A2,2 0 0,0 10,10H9A3,3 0 0,1 12,7Z" fill="rgba(22, 23, 47, 0.5)"/>
+                        <div class="tooltip">                            <svg width="16" height="16" viewBox="0 0 24 24">
+                                <path d="M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,17H13V11H11V17Z" />
                             </svg>
-                            <span class="tooltip-text">Probability that this content was written by a human.</span>
+                            <span class="tooltip-text">This score indicates the likelihood that the text was written by a human.</span>
                         </div>
                     </div>
                     <div class="gauge-visual">
                         <div class="gauge-fill human-fill" id="humanGauge"></div>
                     </div>
-                    <p class="gauge-percentage human-percentage" id="humanPercentage">0%</p>
+                    <div class="gauge-percentage human-percentage" id="humanPercentage">0%</div>
                 </div>
                 
                 <div class="gauge">
@@ -771,31 +792,34 @@ a {
                         </h3>
                         <div class="tooltip">
                             <svg width="16" height="16" viewBox="0 0 24 24">
-                                <path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M11,16.5H13V14.5H11V16.5M12,7A3,3 0 0,1 15,10C15,11.11 14.41,11.59 13.43,12.18L13.13,12.37C12.38,12.89 12,13.38 12,14.5H11C11,13 11.53,12.33 12.46,11.68L12.87,11.42C13.59,10.94 14,10.5 14,10C14,8.89 13.1,8 12,8A2,2 0 0,0 10,10H9A3,3 0 0,1 12,7Z" fill="rgba(22, 23, 47, 0.5)"/>
+                                <path d="M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,17H13V11H11V17Z" />
                             </svg>
-                            <span class="tooltip-text">Probability that this content was generated by AI.</span>
+                            <span class="tooltip-text">This score indicates the likelihood that the text was generated by AI.</span>
                         </div>
                     </div>
                     <div class="gauge-visual">
                         <div class="gauge-fill ai-fill" id="aiGauge"></div>
                     </div>
-                    <p class="gauge-percentage ai-percentage" id="aiPercentage">0%</p>
+                    <div class="gauge-percentage ai-percentage" id="aiPercentage">0%</div>
                 </div>
             </div>
             
             <div class="analysis-details">
                 <h3 class="analysis-title">Detailed Analysis</h3>
-                <p class="analysis-text" id="contentSummary">The content will be analyzed for linguistic patterns, structural elements, and stylistic indicators typically associated with AI-generated and human-written text.</p>
+                <p class="analysis-text" id="analysisText">
+                    The content shows characteristics of [result] text. 
+                    Our model has detected specific patterns and features that indicate this conclusion.
+                </p>
             </div>
         </div>
         
         <footer>
-            <p class="footer-note">This tool provides estimations based on linguistic patterns and should be used as a guide only. No detection system is 100% accurate.</p>
-                        <p>Report a problem by clicking <a href="http://forms.gle/yk6g9SmfjwzvSPpN8" target="_blank">here</a>.</p>
-            <p style="margin-top:var(--space-1);">Copyright © <script>document.write(new Date().getFullYear());</script>, EndGPT. All rights reserved.</p>
+            <p class="footer-note">EndGPT uses multiple neural networks to analyze linguistic patterns and detect AI-generated content. This tool is intended for educational purposes.</p>
+                        <p style="margin-bottom: var(--space-1)">Report a problem by clicking <a href="http://forms.gle/yk6g9SmfjwzvSPpN8" target="_blank">here</a>.</p>
+            <p>Copyright © <script>document.write(new Date().getFullYear());</script>, EndGPT. All rights reserved.</p>
         </footer>
     </div>
-    
+
 <script>
 document.addEventListener("DOMContentLoaded", function() {
         console.log("Page watermarked by Loud Monkey Designs™ (https://voxxdevv.is-a.dev/). (Invisible)");
