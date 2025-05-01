@@ -660,6 +660,45 @@ body {
     transform-style: preserve-3d;
     transition: transform 0.1s ease;
 }
+/* Basic Link Style */
+a {
+    color: var(--accent-blue);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color var(--anim-fast), transform var(--anim-medium);
+}
+
+/* Link Hover State */
+a:hover {
+    color: var(--accent-blue-light);
+    text-decoration: underline;
+    transform: translateY(-2px);
+}
+
+/* Link Active State */
+a:active {
+    color: var(--accent-blue);
+    transform: translateY(0);
+}
+
+/* Link Visited State */
+a:visited {
+    color: var(--text-primary);
+}
+
+/* Adding a subtle animation effect when a link appears */
+a {
+    animation: fadeInLink 0.4s ease-out;
+}
+
+@keyframes fadeInLink {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
     </style>
 </head>
 <body>
@@ -760,11 +799,16 @@ body {
         
         <footer>
             <p class="footer-note">This tool provides estimations based on linguistic patterns and should be used as a guide only. No detection system is 100% accurate.</p>
+                        <p>Report a problem by clicking <a href="http://forms.gle/yk6g9SmfjwzvSPpN8" target="_blank">here</a></p>
             <p>Copyright © <script>document.write(new Date().getFullYear());</script>, EndGPT. All rights reserved.</p>
         </footer>
     </div>
-
+    
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+        console.log("Page watermarked by Loud Monkey Designs™ (https://voxxdevv.is-a.dev/). (Invisible)");
+    });
+</script>
     <script src="script.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/voxxdevv/lmdesigns-watermark@main/watermarkme.min.js"></script> 
 </body>
 </html>
