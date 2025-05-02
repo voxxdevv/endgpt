@@ -636,17 +636,17 @@ document.addEventListener('DOMContentLoaded', function() {
             <h3>${classification} (${confidence} confidence)</h3>
             <p><b>Analysis based on linguistic features:</b></p>
 
-<p>Contains a total of ${features.wordCount} words.</p>
-<p>Includes ${features.uniqueWordCount} unique words, representing ${(features.uniqueWordRatio * 100).toFixed(1)}% uniqueness.</p>
-<p>Uses words with an average length of ${features.avgWordLength.toFixed(2)} characters.</p>
-<p>Exhibits a vocabulary diversity score of ${features.entropyScore.toFixed(2)}.</p>
-<p>Demonstrates a structural consistency rating of ${features.paragraphConsistency.toFixed(2)}.</p>
-<p>Displays a text predictability estimate of ${features.perplexityEstimate.toFixed(2)}.</p>
+<p>- Contains a total of ${features.wordCount} words</p>
+<p>- Includes ${features.uniqueWordCount} unique words, representing ${(features.uniqueWordRatio * 100).toFixed(1)}% uniqueness</p>
+<p>- Uses words with an average length of ${features.avgWordLength.toFixed(2)} characters</p>
+<p>- Exhibits a vocabulary diversity score of ${features.entropyScore.toFixed(2)}</p>
+<p>- Demonstrates a structural consistency rating of ${features.paragraphConsistency.toFixed(2)}</p>
+<p>- Displays a text predictability estimate of ${features.perplexityEstimate.toFixed(2)}</p>
 
             ${keyIndicators.length > 0 ? `
                 <p><strong>Key indicators that influenced this classification:</strong></p>
 
-                    ${keyIndicators.map(indicator => `<p>${indicator}.</p>`).join('')}
+                    ${keyIndicators.map(indicator => `<p>- ${indicator}</p>`).join('')}
 
             ` : ''}
         `;
