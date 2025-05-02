@@ -649,7 +649,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     ${keyIndicators.map(indicator => `<li>${indicator}</li>`).join('')}
                 </ul>
             ` : ''}
-            <p class="disclaimer">This analysis uses machine learning and statistical patterns. Results are most accurate for texts of 300+ words and may vary for creative writing, technical content, or translated materials.</p>
         `;
     }
     
