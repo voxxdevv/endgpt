@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let model;
     const modelLoaded = loadTensorFlowModel();
 
-    // Subtle parallax effect
+    // Subtle parallax effect with reduced intensity
     document.addEventListener('mousemove', function(e) {
         const cards = document.querySelectorAll('.glass-card');
         const mouseX = e.clientX / window.innerWidth - 0.5;
@@ -24,21 +24,23 @@ document.addEventListener('DOMContentLoaded', function() {
             const cardCenterX = cardRect.left + cardRect.width / 2;
             const cardCenterY = cardRect.top + cardRect.height / 2;
             
-            const distanceX = (e.clientX - cardCenterX) / (window.innerWidth / 2) * 5;
-            const distanceY = (e.clientY - cardCenterY) / (window.innerHeight / 2) * 5;
+            // Reduced transform values for less exaggeration (from 5 to 2)
+            const distanceX = (e.clientX - cardCenterX) / (window.innerWidth / 2) * 2;
+            const distanceY = (e.clientY - cardCenterY) / (window.innerHeight / 2) * 2;
             
             const rotateX = -distanceY;
             const rotateY = distanceX;
             
+            // Subtler transform with minimal scaling
             card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1, 1, 1)`;
         });
         
-        // Move blobs slightly based on mouse position
+        // Move blobs slightly based on mouse position (reduced from 40 to 20)
         const blob1 = document.querySelector('.blob-1');
         const blob2 = document.querySelector('.blob-2');
         
-        blob1.style.transform = `translate(${mouseX * 40}px, ${mouseY * 40}px)`;
-        blob2.style.transform = `translate(${-mouseX * 40}px, ${-mouseY * 40}px)`;
+        blob1.style.transform = `translate(${mouseX * 20}px, ${mouseY * 20}px)`;
+        blob2.style.transform = `translate(${-mouseX * 20}px, ${-mouseY * 20}px)`;
     });
     
     // Reset card transform when mouse leaves the window
@@ -602,8 +604,9 @@ document.addEventListener('DOMContentLoaded', function() {
             keyIndicators.push("Unusually consistent paragraph structure");
         if (features.uniqueWordRatio < 0.42) 
             keyIndicators.push("Low lexical diversity");
-        if (features.sentenceLengthVariation < 0.35) 
-            keyIndicators.push("Highly consistent sentence lengths");        if (features.burstiness < 0.30) 
+                    if (features.sentenceLengthVariation < 0.35) 
+            keyIndicators.push("Highly consistent sentence lengths");        
+        if (features.burstiness < 0.30) 
             keyIndicators.push("Lack of natural word usage variation");
         if (features.aiPatternMatches > 3) 
             keyIndicators.push("Contains multiple AI-typical phrases or patterns");
