@@ -646,7 +646,7 @@ document.addEventListener('DOMContentLoaded', function() {
             ${keyIndicators.length > 0 ? `
                 <p><strong>Key indicators that influenced this classification:</strong></p>
 
-                    ${keyIndicators.map(indicator => `<p>${indicator}</p>`).join('')}
+                    ${keyIndicators.map(indicator => `<p>${indicator}.</p>`).join('')}
 
             ` : ''}
         `;
