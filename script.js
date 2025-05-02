@@ -634,20 +634,20 @@ document.addEventListener('DOMContentLoaded', function() {
         // Set HTML with enhanced detailed analysis
         analysisText.innerHTML = `
             <h3>${classification} (${confidence} confidence)</h3>
-            <p><b>Analysis based on TensorFlow deep learning model and linguistic features:</b></p>
-            <ul>
-                <li>Word count: ${features.wordCount}</li>
-                <li>Unique words: ${features.uniqueWordCount} (${(features.uniqueWordRatio * 100).toFixed(1)}% unique)</li>
-                <li>Avg. word length: ${features.avgWordLength.toFixed(2)} characters</li>
-                <li>Vocabulary diversity: ${features.entropyScore.toFixed(2)}</li>
-                <li>Structural consistency: ${features.paragraphConsistency.toFixed(2)}</li>
-                <li>Text predictability: ${features.perplexityEstimate.toFixed(2)}</li>
-            </ul>
+            <p><b>Analysis based on linguistic features:</b></p>
+
+                <p>Word count: ${features.wordCount}</p>
+                <p>Unique words: ${features.uniqueWordCount} (${(features.uniqueWordRatio * 100).toFixed(1)}% unique)</p>
+                <p>Avg. word length: ${features.avgWordLength.toFixed(2)} characters</p>
+                <p>Vocabulary diversity: ${features.entropyScore.toFixed(2)}</p>
+                <p>Structural consistency: ${features.paragraphConsistency.toFixed(2)}</p>
+                <p>Text predictability: ${features.perplexityEstimate.toFixed(2)}</p>
+
             ${keyIndicators.length > 0 ? `
                 <p><strong>Key indicators that influenced this classification:</strong></p>
-                <ul>
-                    ${keyIndicators.map(indicator => `<li>${indicator}</li>`).join('')}
-                </ul>
+
+                    ${keyIndicators.map(indicator => `<p>${indicator}</p>`).join('')}
+
             ` : ''}
         `;
     }
