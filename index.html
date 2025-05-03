@@ -185,14 +185,13 @@
 
 /* Settings Modal */
 .settings-button {
-    position: fixed;
-    top: 1rem;
-    right: 1rem;
+    margin: 0 auto;
+    margin-top: var(--space-3);
     width: 40px;
     height: 40px;
     background: var(--bg-glass);
-    border-radius: 50%;
-    display: flex;
+    border-radius: var(--border-radius-lg);
+    display: flex; /* Needed to center icon/text inside the button */
     align-items: center;
     justify-content: center;
     cursor: pointer;
@@ -201,11 +200,12 @@
     z-index: 100;
     color: var(--accent-blue);
     transition: all var(--anim-medium) ease;
+    animation: fadeIn var(--anim-slow) ease-out 1s backwards;
 }
 
 .settings-button:hover {
-    transform: rotate(45deg);
-    background: var(--bg-glass-hover);
+    color: var(--text-secondary);
+    background: rgba(255, 255, 255, 0.1);
     box-shadow: var(--shadow-md);
 }
 
@@ -281,8 +281,8 @@
     font-size: 1.8rem;
     color: var(--text-secondary);
     cursor: pointer;
-    width: 32px;
-    height: 32px;
+    width: 40px;
+    height: 40px;
     display: flex;
     align-items: center;      /* Vertical centering */
     justify-content: center;  /* Horizontal centering */
@@ -1013,11 +1013,6 @@ a {
 }
     </style>
 </head>
-<div class="settings-button" id="settingsBtn">
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-  <path d="M20.71 4.63l-1.34-1.34a1 1 0 0 0-1.41 0l-2.12 2.12 2.75 2.75 2.12-2.12a1 1 0 0 0 0-1.41zM3 17.25V21h3.75l9.81-9.81-3.75-3.75L3 17.25z"/>
-</svg>
-</div>
 <body>
     <div class="blob blob-1"></div>
     <div class="blob blob-2"></div>
@@ -1116,6 +1111,42 @@ a {
             </div>
         </div>
         
+<div class="settings-button" id="settingsBtn">
+<svg fill="currentColor" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20" viewBox="0 0 512 512" xml:space="preserve">
+<g>
+	<g>
+		
+			<rect x="44.207" y="273.04" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -166.1001 197.0044)" width="221.097" height="51.925"/>
+	</g>
+</g>
+<g>
+	<g>
+		
+			<rect x="-14.021" y="214.807" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -141.9776 138.7753)" width="221.097" height="51.925"/>
+	</g>
+</g>
+<g>
+	<g>
+		
+			<rect x="102.445" y="331.272" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -190.2188 255.2411)" width="221.097" height="51.925"/>
+	</g>
+</g>
+<g>
+	<g>
+		
+			<rect x="160.672" y="389.506" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -214.3418 313.4697)" width="221.097" height="51.925"/>
+	</g>
+</g>
+<g>
+	<g>
+		<path d="M497.302,17.311l-2.609-2.609c-19.597-19.597-51.483-19.597-71.08,0L297.805,140.509l-33.327-33.327
+			c-19.597-19.597-51.484-19.597-71.081,0l-15.545,15.545l211.424,211.424l15.545-15.545c19.597-19.597,19.598-51.483,0-71.08
+			l-33.327-33.327L497.302,88.392C516.899,68.795,516.899,36.907,497.302,17.311z"/>
+	</g>
+</g>
+</svg>
+</div>
+
         <footer>
             <p class="footer-note">EndGPT uses machine learning to analyze linguistic patterns and detect AI-generated content. This tool is intended for educational purposes.</p>
                         <p style="margin-bottom: var(--space-1)">Report a problem by clicking <a href="http://forms.gle/yk6g9SmfjwzvSPpN8" target="_blank">here</a>.</p>
