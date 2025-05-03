@@ -45,6 +45,7 @@
     --anim-fast: 0.2s;
     --anim-medium: 0.4s;
     --anim-slow: 0.8s;
+    --gauge-visbg: rgba(255, 255, 255, 0.1);
 }
 
 /* Theme Variables */
@@ -137,6 +138,29 @@
     --analysis-bg: rgba(235, 235, 240, 0.7);
    --analyze-btn-shadow: 0 4px 12px rgba(0, 122, 255, 0.25);
    --analyze-btn-shadowhov: 0 8px 25px rgba(0, 122, 255, 0.25);
+    --gauge-visbg: rgba(255, 255, 255, 0.7);
+}
+
+/* BRAT Theme */
+[data-theme="brat"] {
+    --bg-primary: rgba(30, 30, 30, 1);
+    --bg-glass: rgba(40, 40, 40, 0.8);
+    --bg-glass-hover: rgba(50, 50, 50, 0.9);
+    --text-primary: rgba(255, 255, 255, 1);
+    --text-secondary: rgba(220, 220, 220, 0.9);
+    --accent-blue: rgba(198, 253, 81, 1);
+    --accent-blue-light: rgba(198, 253, 81, 0.15);
+    --accent-green: rgba(198, 253, 81, 0.8);
+    --accent-orange: rgba(255, 200, 50, 1);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 16px 50px rgba(0, 0, 0, 0.5);
+    --border-light: 1px solid rgba(198, 253, 81, 0.3);
+    --textarea-bg: rgba(20, 20, 20, 0.9);
+    --gauge-bg: rgba(20, 20, 20, 0.7);
+    --analysis-bg: rgba(20, 20, 20, 0.7);
+    --analyze-btn-shadow: 0 4px 12px rgba(198, 253, 81, 0.4);
+    --analyze-btn-shadowhov: 0 8px 25px rgba(198, 253, 81, 0.5);
 }
 
 /* Nature Theme */
@@ -212,7 +236,6 @@
 .settings-modal {
     display: none;
     position: fixed;
-    margin: auto;
     top: 0;
     left: 0;
     width: 100%;
@@ -221,33 +244,37 @@
     z-index: 999;
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    align-items: center;
-    justify-content: center;
     opacity: 0;
     visibility: hidden;
     transition: all 0.3s ease;
 }
 
 .settings-modal.active {
-    display: flex;
+    display: block;
     opacity: 1;
     visibility: visible;
+}
+
+.settings-content {
+position: sticky;
+top: 1rem;
+margin: 0 auto;
+margin-bottom: 1rem;
+width: 90%;
+min-height: auto;
+max-width: 550px;
+max-height: auto;
+overflow-y: auto;
+background: var(--bg-glass);
+border-radius: var(--border-radius-lg);
+border: var(--border-light);
+box-shadow: var(--shadow-lg);
+animation: modalFadeIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .settings-modal.fade-out {
   opacity: 0;
   visibility: visible; /* Keep visible during fade */
-}
-
-.settings-content {
-    position: fixed;
-    width: 90%;
-    max-width: 550px;
-    min-height: 0;
-    overflow-y: auto;
-    border-radius: var(--border-radius-lg);
-    animation: modalFadeIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    padding: 0;
 }
 
 @keyframes modalFadeIn {
@@ -383,6 +410,10 @@
 
 .sunrise-gold-preview {
     background: linear-gradient(135deg, rgba(40, 35, 25, 0.9) 0%, rgba(255, 215, 0, 0.4) 50%, rgba(230, 190, 60, 0.6) 100%);
+}
+
+.brat-preview {
+    background: linear-gradient(135deg, rgba(30, 30, 30, 0.9) 0%, rgba(198, 253, 81, 0.6) 50%, rgba(30, 30, 30, 0.8) 100%);
 }
 
 .avalanche-preview {
@@ -739,7 +770,7 @@ textarea:focus {
 
 .gauge-visual {
     height: 10px;
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: var(--gauge-visbg);
     border-radius: 10px;
     overflow: hidden;
     margin: var(--space-1) 0;
@@ -1020,7 +1051,31 @@ a {
     <div class="main-container">
         <header>
             <div style="padding: 0;justify-content:center;margin: 0 auto;margin-bottom: var(--space-1);display: flex; align-items: center; gap: 1rem;">
-                <svg width="3.5rem" height="3.5rem" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="100" cy="100" r="90" fill="url(#logoGradient)"></circle><circle cx="100" cy="100" r="85" stroke="white" stroke-width="2" stroke-dasharray="4 6" opacity="0.7"></circle><circle cx="100" cy="100" r="70" fill="url(#meshPattern)" opacity="0.2"></circle><path d="M50 80 L80 80 L90 90 L130 90 L140 80 L150 80" stroke="rgba(255,255,255,0.7)" stroke-width="2" fill="none"></path><path d="M60 120 L80 120 L90 110 L130 110 L140 120 L150 120" stroke="rgba(255,255,255,0.7)" stroke-width="2" fill="none"></path><circle cx="90" cy="90" r="3" fill="white"></circle><circle cx="130" cy="90" r="3" fill="white"></circle><circle cx="90" cy="110" r="3" fill="white"></circle><circle cx="130" cy="110" r="3" fill="white"></circle><circle cx="100" cy="100" r="10" fill="white"></circle><line x1="60" y1="140" x2="140" y2="60" stroke="white" stroke-width="4" stroke-linecap="round"><animate attributeName="stroke-dasharray" values="0,200;180,20;180,20" dur="1.5s" begin="0s" fill="freeze"/></line><defs><linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="rgba(0, 122, 255, 1)"><animate attributeName="stop-color" values="rgba(0, 122, 255, 1);rgba(20, 132, 255, 1);rgba(0, 122, 255, 1)" dur="6s" repeatCount="indefinite" begin="0s"/></stop><stop offset="100%" stop-color="rgba(144, 19, 254, 0.8)"><animate attributeName="stop-color" values="rgba(144, 19, 254, 0.8);rgba(164, 39, 254, 0.8);rgba(144, 19, 254, 0.8)" dur="6s" repeatCount="indefinite" begin="0s"/></stop></linearGradient><pattern id="meshPattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><rect x="0" y="0" width="20" height="20" fill="none"/><path d="M0 0 L20 20 M20 0 L0 20" stroke="white" stroke-width="0.5" opacity="0.3"><animate attributeName="stroke-opacity" values="0.3;0.5;0.3" dur="4s" repeatCount="indefinite" begin="0s"/></path></pattern></defs></svg>
+<svg width="3.5rem" height="3.5rem" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="100" cy="100" r="90" fill="url(#logoGradient)"></circle>
+  <circle cx="100" cy="100" r="85" stroke="var(--bg-primary)" stroke-width="2" stroke-dasharray="4 6" opacity="0.7"></circle>
+  <circle cx="100" cy="100" r="70" fill="url(#meshPattern)" opacity="0.2"></circle>
+  <path d="M50 80 L80 80 L90 90 L130 90 L140 80 L150 80" stroke="var(--bg-primary)" stroke-width="2" fill="none" opacity="0.7"></path>
+  <path d="M60 120 L80 120 L90 110 L130 110 L140 120 L150 120" stroke="var(--bg-primary)" stroke-width="2" fill="none" opacity="0.7"></path>
+  <circle cx="90" cy="90" r="3" fill="var(--bg-primary)"></circle>
+  <circle cx="130" cy="90" r="3" fill="var(--bg-primary)"></circle>
+  <circle cx="90" cy="110" r="3" fill="var(--bg-primary)"></circle>
+  <circle cx="130" cy="110" r="3" fill="var(--bg-primary)"></circle>
+  <circle cx="100" cy="100" r="6" fill="var(--bg-primary)"></circle>
+  <line x1="60" y1="140" x2="140" y2="60" stroke="var(--bg-primary)" stroke-width="2" stroke-linecap="round">
+    <animate attributeName="stroke-dasharray" values="0,200;180,20;180,20" dur="1.5s" begin="0s" fill="freeze"/>
+  </line>
+  <defs>
+    <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="var(--accent-blue)"></stop>
+      <stop offset="100%" stop-color="rgba(144, 19, 254, 0.8)"></stop>
+    </linearGradient>
+    <pattern id="meshPattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+      <rect x="0" y="0" width="20" height="20" fill="none"/>
+      <path d="M0 0 L20 20 M20 0 L0 20" stroke="var(--text-primary)" stroke-width="0.5" opacity="0.3"></path>
+    </pattern>
+  </defs>
+</svg>
                 <h1 class="logo">EndGPT</h1>
             </div>
             <p class="tagline">Advanced AI-generated content detection and analysis.</p>
@@ -1030,7 +1085,7 @@ a {
             <div class="input-section">
                 <div class="input-header">
                     <h2 class="input-title">Text Analysis</h2>
-                    <svg class="input-icon" viewBox="0 0 24 24">
+                    <svg class="input-icon" width="20" height="20" "viewBox="0 0 24 24">
                         <path d="M14,17H7V15H14M17,13H7V11H17M17,9H7V7H17M19,3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3Z" />
                     </svg>
                 </div>
@@ -1191,6 +1246,10 @@ a {
                 <div class="theme-option" data-theme="oasis">
                     <div class="theme-preview oasis-preview"></div>
                     <span>Oasis</span>
+                </div>
+                <div class="theme-option" data-theme="brat">
+                    <div class="theme-preview brat-preview"></div>
+                    <span>BRAT</span>
                 </div>
             </div>
         </div>
