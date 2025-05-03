@@ -699,3 +699,83 @@ document.addEventListener('DOMContentLoaded', function() {
         }, stepTime);
     }
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Settings functionality
+    const settingsBtn = document.getElementById('settingsBtn');
+    const settingsModal = document.getElementById('settings-modal');
+    const closeSettings = document.querySelector('.close-settings');
+    const themeOptions = document.querySelectorAll('.theme-option');
+    
+    // Load preferences immediately when the page loads
+    loadPreferences();
+    
+    // Open settings modal
+    settingsBtn.addEventListener('click', function() {
+        settingsModal.classList.remove('fade-out');
+        settingsModal.classList.add('active');
+    });
+    
+    // Close settings modal with fade animation
+    function closeSettingsWithFade() {
+        settingsModal.classList.add('fade-out');
+        // Wait for animation to complete before removing active class
+        setTimeout(() => {
+            settingsModal.classList.remove('active');
+            settingsModal.classList.remove('fade-out');
+        }, 300); // Match this with your CSS transition duration
+    }
+    
+    // Close settings when clicking the close button
+    closeSettings.addEventListener('click', function() {
+        closeSettingsWithFade();
+    });
+    
+    // Close settings when clicking outside
+    settingsModal.addEventListener('click', function(e) {
+        if (e.target === settingsModal) {
+            closeSettingsWithFade();
+        }
+    });
+    
+    // Theme switching
+    themeOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            const theme = this.getAttribute('data-theme');
+            
+            // Remove active class from all options
+            themeOptions.forEach(opt => opt.classList.remove('active'));
+            
+            // Add active class to selected option
+            this.classList.add('active');
+            
+            // Apply theme
+            document.documentElement.setAttribute('data-theme', theme);
+            
+            // Save theme preference to localStorage
+            localStorage.setItem('endgpt-theme', theme);
+            
+            // Optional: close settings after selecting a theme
+            // closeSettingsWithFade();
+        });
+    });
+    
+    // Load saved preferences
+    function loadPreferences() {
+        // Load theme preference
+        const savedTheme = localStorage.getItem('endgpt-theme');
+        
+        if (savedTheme) {
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            
+            // Update active theme option
+            themeOptions.forEach(option => {
+                if (option.getAttribute('data-theme') === savedTheme) {
+                    option.classList.add('active');
+                } else {
+                    option.classList.remove('active');
+                }
+            });
+        }
+    }
+});
