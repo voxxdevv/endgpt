@@ -47,6 +47,361 @@
     --anim-slow: 0.8s;
 }
 
+/* Theme Variables */
+/* Dimmed Navy - Default */
+:root {
+    /* Dark Mode Variables */
+    --bg-primary: rgba(18, 20, 25, 1);
+    --bg-glass: rgba(30, 33, 43, 0.6);
+    --bg-glass-hover: rgba(30, 33, 43, 0.8);
+    --text-primary: rgba(240, 240, 245, 1);
+    --text-secondary: rgba(200, 200, 210, 0.8);
+    --accent-blue: rgba(10, 132, 255, 1);
+    --accent-blue-light: rgba(10, 132, 255, 0.15);
+    --accent-green: rgba(48, 209, 88, 1);
+    --accent-orange: rgba(255, 159, 10, 1);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 16px 50px rgba(0, 0, 0, 0.4);
+    --border-light: 1px solid rgba(255, 255, 255, 0.1);
+    --textarea-bg: rgba(40, 44, 52, 0.8);
+    --gauge-bg: rgba(40, 44, 52, 0.5);
+    --analysis-bg: rgba(40, 44, 52, 0.5);
+	 --analyze-btn-shadow: 0 4px 12px rgba(10, 132, 255, 0.4);
+	 --analyze-btn-shadowhov: 0 8px 25px rgba(10, 132, 255, 0.4);
+}
+
+
+
+/* Sunset Pink Theme */
+[data-theme="sunset-pink"] {
+    --bg-primary: rgba(35, 25, 35, 1);
+    --bg-glass: rgba(60, 40, 60, 0.6);
+    --bg-glass-hover: rgba(60, 40, 60, 0.8);
+    --text-primary: rgba(245, 235, 245, 1);
+    --text-secondary: rgba(220, 200, 220, 0.8);
+    --accent-blue: rgba(255, 105, 180, 1);
+    --accent-blue-light: rgba(255, 105, 180, 0.15);
+    --accent-green: rgba(180, 230, 160, 1);
+    --accent-orange: rgba(255, 140, 180, 1);
+    --shadow-sm: 0 2px 8px rgba(35, 20, 35, 0.2);
+    --shadow-md: 0 8px 30px rgba(35, 20, 35, 0.3);
+    --shadow-lg: 0 16px 50px rgba(35, 20, 35, 0.4);
+    --border-light: 1px solid rgba(255, 200, 230, 0.1);
+    --textarea-bg: rgba(50, 35, 50, 0.8);
+    --gauge-bg: rgba(50, 35, 50, 0.5);
+    --analysis-bg: rgba(50, 35, 50, 0.5);
+--analyze-btn-shadow: 0 4px 12px rgba(255, 105, 180, 0.4);
+--analyze-btn-shadowhov: 0 8px 25px rgba(255, 105, 180, 0.4);
+}
+
+/* Sunrise Gold Theme */
+[data-theme="sunrise-gold"] {
+    --bg-primary: rgba(25, 20, 15, 1);
+    --bg-glass: rgba(40, 35, 25, 0.6);
+    --bg-glass-hover: rgba(40, 35, 25, 0.8);
+    --text-primary: rgba(255, 245, 230, 1);
+    --text-secondary: rgba(220, 200, 170, 0.8);
+    --accent-blue: rgba(255, 215, 0, 1); /* Gold accent */
+    --accent-blue-light: rgba(255, 215, 0, 0.15);
+    --accent-green: rgba(230, 190, 60, 1); /* Warm gold */
+    --accent-orange: rgba(255, 165, 0, 1); /* Amber */
+    --shadow-sm: 0 2px 8px rgba(20, 15, 10, 0.2);
+    --shadow-md: 0 8px 30px rgba(20, 15, 10, 0.3);
+    --shadow-lg: 0 16px 50px rgba(20, 15, 10, 0.4);
+    --border-light: 1px solid rgba(255, 215, 0, 0.1);
+    --textarea-bg: rgba(45, 40, 30, 0.8);
+    --gauge-bg: rgba(45, 40, 30, 0.5);
+    --analysis-bg: rgba(45, 40, 30, 0.5);
+    --analyze-btn-shadow: 0 4px 12px rgba(255, 215, 0, 0.35);
+    --analyze-btn-shadowhov: 0 8px 25px rgba(255, 215, 0, 0.35);
+}
+
+/* Avalanche Theme (Light) */
+[data-theme="avalanche"] {
+    --bg-primary: rgba(245, 245, 250, 1);
+    --bg-glass: rgba(255, 255, 255, 0.7);
+    --bg-glass-hover: rgba(255, 255, 255, 0.85);
+    --text-primary: rgba(30, 30, 35, 1);
+    --text-secondary: rgba(80, 80, 100, 0.8);
+    --accent-blue: rgba(0, 122, 255, 1);
+    --accent-blue-light: rgba(0, 122, 255, 0.1);
+    --accent-green: rgba(40, 180, 75, 1);
+    --accent-orange: rgba(230, 120, 10, 1);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.12);
+    --shadow-lg: 0 16px 50px rgba(0, 0, 0, 0.15);
+    --border-light: 1px solid rgba(0, 0, 0, 0.08);
+    --textarea-bg: rgba(240, 240, 245, 0.8);
+    --gauge-bg: rgba(235, 235, 240, 0.7);
+    --analysis-bg: rgba(235, 235, 240, 0.7);
+   --analyze-btn-shadow: 0 4px 12px rgba(0, 122, 255, 0.25);
+   --analyze-btn-shadowhov: 0 8px 25px rgba(0, 122, 255, 0.25);
+}
+
+/* Nature Theme */
+[data-theme="nature"] {
+    --bg-primary: rgba(20, 35, 25, 1);
+    --bg-glass: rgba(30, 45, 35, 0.6);
+    --bg-glass-hover: rgba(30, 45, 35, 0.8);
+    --text-primary: rgba(240, 250, 240, 1);
+    --text-secondary: rgba(200, 220, 200, 0.8);
+    --accent-blue: rgba(70, 180, 120, 1);
+    --accent-blue-light: rgba(70, 180, 120, 0.15);
+    --accent-green: rgba(150, 220, 90, 1);
+    --accent-orange: rgba(240, 180, 60, 1);
+    --shadow-sm: 0 2px 8px rgba(10, 25, 15, 0.2);
+    --shadow-md: 0 8px 30px rgba(10, 25, 15, 0.3);
+    --shadow-lg: 0 16px 50px rgba(10, 25, 15, 0.4);
+    --border-light: 1px solid rgba(100, 200, 150, 0.1);
+    --textarea-bg: rgba(35, 50, 40, 0.8);
+    --gauge-bg: rgba(35, 50, 40, 0.5);
+    --analysis-bg: rgba(35, 50, 40, 0.5);
+   --analyze-btn-shadow: 0 4px 12px rgba(70, 180, 120, 0.35);
+   --analyze-btn-shadowhov: 0 8px 25px rgba(70, 180, 120, 0.35);
+}
+
+/* Oasis Theme */
+[data-theme="oasis"] {
+    --bg-primary: rgba(25, 45, 65, 1);
+    --bg-glass: rgba(35, 60, 85, 0.6);
+    --bg-glass-hover: rgba(35, 60, 85, 0.8);
+    --text-primary: rgba(235, 245, 255, 1);
+    --text-secondary: rgba(190, 220, 240, 0.8);
+    --accent-blue: rgba(90, 180, 255, 1);
+    --accent-blue-light: rgba(90, 180, 255, 0.15);
+    --accent-green: rgba(100, 210, 200, 1);
+    --accent-orange: rgba(255, 170, 120, 1);
+    --shadow-sm: 0 2px 8px rgba(15, 30, 50, 0.2);
+    --shadow-md: 0 8px 30px rgba(15, 30, 50, 0.3);
+    --shadow-lg: 0 16px 50px rgba(15, 30, 50, 0.4);
+    --border-light: 1px solid rgba(120, 180, 240, 0.1);
+    --textarea-bg: rgba(40, 70, 95, 0.8);
+    --gauge-bg: rgba(40, 70, 95, 0.5);
+    --analysis-bg: rgba(40, 70, 95, 0.5);
+    --analyze-btn-shadow: 0 4px 12px rgba(90, 180, 255, 0.35);
+    --analyze-btn-shadowhov: 0 8px 25px rgba(90, 180, 255, 0.35);
+}
+
+/* Settings Modal */
+.settings-button {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    width: 40px;
+    height: 40px;
+    background: var(--bg-glass);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: var(--border-light);
+    box-shadow: var(--shadow-sm);
+    z-index: 100;
+    color: var(--text-primary);
+    transition: all var(--anim-medium) ease;
+}
+
+.settings-button:hover {
+    transform: rotate(45deg);
+    background: var(--bg-glass-hover);
+    box-shadow: var(--shadow-md);
+}
+
+.settings-modal {
+    display: none;
+    position: fixed;
+    margin: auto;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 999;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.settings-modal.active {
+    display: flex;
+    opacity: 1;
+    visibility: visible;
+}
+
+.settings-modal.fade-out {
+  opacity: 0;
+  visibility: visible; /* Keep visible during fade */
+}
+
+.settings-content {
+    position: fixed;
+    width: 90%;
+    max-width: 550px;
+    min-height: 100vh;
+    overflow-y: auto;
+    border-radius: var(--border-radius-lg);
+    animation: modalFadeIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    padding: 0;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-3);
+    border-bottom: var(--border-light);
+}
+
+.settings-header h2 {
+    margin: 0;
+    font-weight: 600;
+    font-size: 1.4rem;
+}
+
+.close-settings {
+    background: transparent;
+    border: none;
+    font-size: 1.8rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;      /* Vertical centering */
+    justify-content: center;  /* Horizontal centering */
+    border-radius: 50%;
+    transition: all var(--anim-fast) ease;
+    
+    /* Fix common text centering issues */
+    padding: 0;               /* Remove padding that might offset the text */
+    line-height: 0;           /* Fix vertical alignment issues with text */
+    text-align: center;       /* Additional horizontal text alignment */
+}
+
+/* If the text appears too high or too low, try this adjustment */
+.close-settings span {
+    display: inline-block;
+    position: relative;
+    top: -1px;               /* Fine-tune vertical position if needed */
+}
+
+.close-settings:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.settings-section {
+    padding: var(--space-3);
+    border-bottom: var(--border-light);
+}
+
+.settings-section:last-child {
+    border-bottom: none;
+}
+
+.settings-section h3 {
+    margin: 0 0 var(--space-2);
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+/* Theme Options */
+.theme-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: var(--space-2);
+    margin-top: var(--space-2);
+}
+
+.theme-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: all var(--anim-medium) ease;
+    padding-top: var(--space-1);
+    border-radius: 8px;
+}
+
+.theme-option.active {
+    background: var(--bg-glass);
+    box-shadow: var(--shadow-sm);
+}
+
+.theme-preview {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-bottom: var(--space-1);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--anim-fast) ease;
+}
+
+.theme-option.active .theme-preview {
+    border: 2px solid transparent;
+    border-color: var(--accent-blue);
+    transform: scale(1.1);
+}
+
+.theme-option span {
+    font-size: 0.8rem;
+    text-align: center;
+    transition: all var(--anim-fast) ease;
+    margin-top: -0.05rem;
+}
+
+.theme-option.active span {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+/* Theme Preview Colors */
+.dimmed-navy-preview {
+    background: linear-gradient(135deg, rgba(18, 20, 25, 1) 0%, rgba(30, 33, 43, 1) 100%);
+}
+
+.sunset-pink-preview {
+    background: linear-gradient(135deg, rgba(35, 25, 35, 1) 0%, rgba(60, 40, 60, 1) 100%);
+}
+
+.sunrise-gold-preview {
+    background: linear-gradient(135deg, rgba(40, 35, 25, 0.9) 0%, rgba(255, 215, 0, 0.4) 50%, rgba(230, 190, 60, 0.6) 100%);
+}
+
+.avalanche-preview {
+    background: linear-gradient(135deg, rgba(245, 245, 250, 1) 0%, rgba(230, 230, 240, 1) 100%);
+}
+
+.nature-preview {
+    background: linear-gradient(135deg, rgba(20, 35, 25, 1) 0%, rgba(35, 50, 40, 1) 100%);
+}
+
+.oasis-preview {
+    background: linear-gradient(135deg, rgba(25, 45, 65, 1) 0%, rgba(40, 70, 95, 1) 100%);
+}
+
+/* Modified Header for Settings Button */
+header {
+    position: relative;
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -235,7 +590,7 @@ textarea:focus {
     font-weight: 600;
     cursor: pointer;
     transition: all var(--anim-medium) cubic-bezier(0.34, 1.56, 0.64, 1);
-    box-shadow: 0 4px 12px rgba(10, 132, 255, 0.4);
+    box-shadow: var(--analyze-btn-shadow);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -260,7 +615,7 @@ textarea:focus {
 
 .analyze-btn:hover {
     transform: translateY(-4px) scale(1.03);
-    box-shadow: 0 8px 20px rgba(10, 132, 255, 0.5);
+    box-shadow: var(--analyze-btn-shadowhov);
 }
 
 .analyze-btn:hover::before {
@@ -276,6 +631,7 @@ textarea:focus {
     display: none;
     text-align: center;
     margin: var(--space-3) 0;
+    margin-bottom: 0;
     color: var(--text-secondary);
     font-size: 1rem;
     margin-bottom: 0;
@@ -656,6 +1012,11 @@ a {
 }
     </style>
 </head>
+<div class="settings-button" id="settingsBtn">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z" fill="currentColor"/>
+    </svg>
+</div>
 <body>
     <div class="blob blob-1"></div>
     <div class="blob blob-2"></div>
@@ -761,11 +1122,57 @@ a {
         </footer>
     </div>
 
+<div id="settings-modal" class="settings-modal">
+    <div class="settings-content glass-card">
+        <div class="settings-header">
+            <h2>Settings</h2>
+            <button class="close-settings"><span>&times;</span></button>
+        </div>
+        
+        <div class="settings-section">
+            <h3 style="margin-bottom: -0.85rem;">Theme</h3>
+            <div class="theme-options">
+                <div class="theme-option active" data-theme="dimmed-navy">
+                    <div class="theme-preview dimmed-navy-preview"></div>
+                    <span>Dimmed Navy</span>
+                </div>
+
+                <div class="theme-option" data-theme="avalanche">
+                    <div class="theme-preview avalanche-preview"></div>
+                    <span>Avalanche</span>
+                </div>
+
+                <div class="theme-option" data-theme="sunset-pink">
+                    <div class="theme-preview sunset-pink-preview"></div>
+                    <span>Sunset Pink</span>
+                </div>
+
+
+                <div class="theme-option" data-theme="sunrise-gold">
+                    <div class="theme-preview sunrise-gold-preview"></div>
+                    <span>Sunrise Gold</span>
+                </div>
+
+                <div class="theme-option" data-theme="nature">
+                    <div class="theme-preview nature-preview"></div>
+                    <span>Nature</span>
+                </div>
+                <div class="theme-option" data-theme="oasis">
+                    <div class="theme-preview oasis-preview"></div>
+                    <span>Oasis</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
 document.addEventListener("DOMContentLoaded", function() {
         console.log("Page watermarked by Loud Monkey Designs™ (https://voxxdevv.is-a.dev/). (Invisible)");
     });
 </script>
+
     <script src="script.js"></script>
+
 </body>
 </html>
