@@ -234,19 +234,20 @@
 }
 
 .settings-content {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 90%;
-    max-width: 550px;
-    max-height: 90vh;
-    overflow-y: auto;
-    background: var(--bg-glass);
-    border-radius: var(--border-radius-lg);
-    border: var(--border-light);
-    box-shadow: var(--shadow-lg);
-    animation: modalFadeIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+position: sticky;
+top: 1rem;
+margin: 0 auto;
+margin-bottom: 1rem;
+width: 90%;
+min-height: auto;
+max-width: 550px;
+max-height: auto;
+overflow-y: auto;
+background: var(--bg-glass);
+border-radius: var(--border-radius-lg);
+border: var(--border-light);
+box-shadow: var(--shadow-lg);
+animation: modalFadeIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .settings-modal.fade-out {
@@ -434,16 +435,16 @@ body {
     margin: 0;
     padding: 0;
 }
+
 .main-container {
     width: 100%;
     max-width: 720px;
     padding: 0 var(--space-2);
-    margin: var(--space-2) auto 0 auto;
+    margin: var(--space-2) auto;
     gap: var(--space-3);
     display: flex;
     flex-direction: column;
     animation: fadeInUp 0.8s ease-out;
-    flex: 1;
 }
 
 @keyframes fadeInUp {
@@ -842,13 +843,13 @@ textarea:focus {
 
 footer {
     text-align: center;
-    margin-top: auto;
+    margin: 0;
+    margin-top: var(--space-3);
     margin-bottom: var(--space-3);
     color: var(--text-secondary);
     font-size: 0.95rem;
     opacity: 0.8;
     width: 100%;
-    max-width: 720px;
     padding: 0 var(--space-3);
     animation: fadeIn var(--anim-slow) ease-out 1s backwards;
 }
